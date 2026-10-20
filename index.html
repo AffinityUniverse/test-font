@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>내 폰트 만들기</title>
+<style>
+:root{--ink:#25272c;--muted:#747984;--line:#e5e7eb;--paper:#fff;--bg:#f6f7f9;--accent:#6757d9;--soft:#eeebff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+header{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:3}
+.brand{font-weight:800;font-size:19px;letter-spacing:-.7px}.brand span{color:var(--accent)}.topright{display:flex;gap:10px;align-items:center}.save{font-size:12px;color:#737783;margin-right:8px}
+button,select,input{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 12px;color:var(--ink);font-size:13px}button:hover{border-color:#b9b1fa}button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}button:disabled{opacity:.4;cursor:not-allowed}
+.layout{display:grid;grid-template-columns:245px minmax(360px,1fr) 300px;gap:18px;max-width:1500px;margin:22px auto;padding:0 20px}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden;min-width:0}.panelhead{padding:17px 18px;border-bottom:1px solid var(--line)}h2{font-size:15px;margin:0 0 5px;letter-spacing:-.3px}.sub{font-size:12px;color:var(--muted);line-height:1.55}.sidebody{padding:14px}.tabs{display:flex;flex-wrap:wrap;background:#f3f4f7;border-radius:9px;padding:3px;gap:3px}.tabs button{border:0;background:transparent;flex:1 1 28%;padding:8px 3px;font-size:11px}.tabs button.active{background:#fff;box-shadow:0 1px 3px #0001;font-weight:700}
+.sectionlabel{font-size:11px;font-weight:800;color:#878b96;letter-spacing:.7px;margin:18px 0 9px}.glyphgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.glyph{aspect-ratio:1;border:1px solid #e1e2ea;border-radius:14px;display:grid;place-items:center;font-size:23px;background:#fff;box-shadow:0 4px 0 #c9c1ff;transform:translateY(-2px);transition:transform .12s,box-shadow .12s}.glyph.active{border:2px solid #d9d5f7;background:#fff;color:var(--ink);box-shadow:0 4px 0 #bcb2ff}.glyph:active{transform:translateY(1px);box-shadow:0 1px 0 #c9c1ff}.glyph.done{box-shadow:0 4px 0 #c9c1ff}.center{display:flex;flex-direction:column;gap:16px}.worktop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.current{display:flex;align-items:center;gap:12px}.currentchar{width:48px;height:48px;background:var(--soft);color:var(--accent);border-radius:12px;display:grid;place-items:center;font-size:29px;font-weight:600}.tools{display:flex;gap:6px;flex-wrap:wrap}.tools button{padding:8px 10px}.tools button.active{background:var(--soft);border-color:#bcb3ff;color:var(--accent)}
+.canvaswrap{padding:16px;background:#fff;border:1px solid var(--line);border-radius:15px}.canvasstage{position:relative;width:100%;height:min(53vh,480px);min-height:300px;background:#fff;border:1px solid #ececf0;border-radius:8px;overflow:hidden}.canvasstage canvas{width:100%;height:100%;display:block;touch-action:none}.canvasnote{display:flex;justify-content:space-between;gap:10px;color:#8a8e98;font-size:11px;padding-top:11px}.toolbarrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.colors{display:flex;gap:7px;align-items:center}.swatch{width:22px;height:22px;padding:0;border-radius:50%;border:2px solid white;box-shadow:0 0 0 1px #ddd}.swatch.selected{box-shadow:0 0 0 2px var(--accent)}input[type=color]{width:30px;height:30px;border:0;padding:0;background:none;cursor:pointer}.rightbody{padding:16px}.previewinput{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px;font-size:14px;outline:none}.previewinput:focus{border-color:var(--accent)}.preview{margin-top:12px;min-height:140px;border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:28px;line-height:1.65;word-break:keep-all;white-space:pre-wrap;background:#fff}.miniinfo{font-size:11px;color:var(--muted);line-height:1.65;margin-top:10px}.progress{height:6px;border-radius:8px;background:#f0f0f3;overflow:hidden;margin:10px 0 5px}.progress div{height:100%;width:0;background:var(--accent);transition:width .2s}.statrow{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}.download{width:100%;margin-top:14px;padding:12px}.smallbtns{display:flex;gap:7px;margin-top:9px}.smallbtns button{flex:1}.notice{background:#fff8e7;color:#785c18;border:1px solid #f3e5b8;padding:10px;border-radius:9px;font-size:11px;line-height:1.6;margin-top:14px}.foot{max-width:1500px;margin:0 auto 25px;padding:0 20px;color:#8a8e98;font-size:11px}
+@media(max-width:1050px){.layout{grid-template-columns:210px minmax(300px,1fr)}.right{grid-column:1/-1}.right .rightbody{display:grid;grid-template-columns:1fr 1fr;gap:14px}.right .panelhead{padding-bottom:12px}}
+@media(max-width:680px){header{padding:0 14px}.layout{display:flex;flex-direction:column;padding:0 10px;margin:12px auto}.layout>.panel:first-child{order:2}.center{order:1}.right{order:3}.glyphgrid{grid-template-columns:repeat(7,1fr)}.glyph{font-size:19px}.canvasstage{height:55vh;min-height:280px}.right .rightbody{display:block}.save{display:none}}
+</style>
+</head>
+<body>
+<header><div class="brand">내 폰트 <span>만들기</span></div><div class="topright"><span class="save" id="saveStatus">자동 저장 준비됨</span><button id="resetAll">초기화</button><button class="primary" id="downloadTop">OTF 글꼴 다운로드 ↗</button></div></header>
+<main class="layout">
+<section class="panel">
+ <div class="panelhead"><h2>글자 목록</h2><div class="sub">한글, 영문, 숫자, 기호를 직접 디자인하세요.</div><div class="progress"><div id="progressBar"></div></div><div class="statrow"><span>완성한 글자</span><b id="progressText">0 / 40</b></div></div>
+ <div class="sidebody"><div class="tabs"><button class="active" data-tab="consonants">자음</button><button data-tab="vowels">모음</button><button data-tab="uppercase">영문 대문자</button><button data-tab="lowercase">영문 소문자</button><button data-tab="numbers">숫자</button><button data-tab="symbols">기호</button></div><div class="sectionlabel" id="listLabel">자음 · CONSONANTS</div><div class="glyphgrid" id="glyphGrid"></div><div class="miniinfo">글자를 선택하고 가운데 작업 공간에서 직접 그려 보세요. 작업 내용은 이 브라우저에 자동 저장됩니다.</div></div>
+</section>
+<section class="center">
+ <div class="panel" style="padding:16px 18px"><div class="worktop"><div class="current"><div class="currentchar" id="currentChar">ㄱ</div><div><h2 id="currentTitle">ㄱ 디자인하기</h2><div class="sub" id="currentSub">자음 · 1번째 글자</div></div></div><div class="tools"><button data-tool="pen" class="active">✎ 펜</button><button data-tool="eraser">⌫ 지우개</button><button data-tool="rect">□ 네모</button><button data-tool="circle">○ 동그라미</button></div></div></div>
+ <div class="canvaswrap"><div class="toolbarrow"><div class="colors"><span class="sub">색상</span><span class="swatch selected" style="background:#25272c;display:inline-block" aria-label="검정색"></span><span class="sub">검정색</span></div><div class="tools"><button id="undoBtn">↶ 되돌리기</button><button id="clearBtn">전체 지우기</button></div></div>
+ <div class="canvasstage"><canvas id="drawCanvas" width="900" height="600"></canvas></div><div class="canvasnote"><span>회색 가이드를 참고해 자유롭게 그려 보세요.</span><span>선 굵기 <input id="brushSize" type="range" min="3" max="28" value="12" style="width:75px;vertical-align:middle"></span></div></div>
+</section>
+<section class="panel right">
+ <div class="panelhead"><h2>내 글꼴 미리보기</h2><div class="sub">단어를 입력하면 직접 만든 글자들이 조합돼요.</div></div>
+ <div class="rightbody"><div><input class="previewinput" id="wordInput" value="" placeholder="미리 볼 단어를 입력하세요"><div class="preview" id="previewText"></div></div><div><div class="sectionlabel" style="margin-top:4px">글꼴 정보</div><label class="sub" for="fontName" style="display:block;margin-bottom:6px">내가 만든 폰트 이름</label><input class="previewinput" id="fontName" value="내 손글씨 폰트" placeholder="폰트 이름을 입력하세요"><div class="statrow" style="margin-top:12px"><span>문자 세트</span><b>한글 완성형</b></div><button class="primary download" id="downloadBtn">OTF 글꼴 다운로드</button></div></div>
+</section>
+</main><div class="foot">내 글꼴 공방 · 개인 작업은 현재 브라우저에 저장됩니다. 브라우저 데이터 삭제 시 작업이 사라질 수 있어요.</div>
+<script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
+<script>
+(() => {
+const consonants=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const vowels=['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
+const jamo=[...consonants,...vowels];
+const symbols=['.',',','!','?','~','-','(',')',':',';','/','@',"'",'"'];const symbolSet=new Set(symbols);
+ const categories={consonants,vowels,uppercase:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),lowercase:'abcdefghijklmnopqrstuvwxyz'.split(''),numbers:'0123456789'.split(''),symbols};
+ const all=[...jamo,...categories.uppercase,...categories.lowercase,...categories.numbers,...symbols];
+ const categoryNames={consonants:'자음 · CONSONANTS',vowels:'모음 · VOWELS',uppercase:'영문 대문자 · UPPERCASE',lowercase:'영문 소문자 · LOWERCASE',numbers:'숫자 · NUMBERS',symbols:'기호 · SYMBOLS'};
+ const state={drawings:{},tab:'consonants',index:0,tool:'pen',color:'#25272c',size:12,undo:[],active:false,start:null};
+const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d'); let lastSave=0;
+const key=()=>all[state.index], glyphKey=(g)=>'handfont-v1-'+g;
+function guide(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+ // Very light gray writing lines and a faint model glyph for students to trace.
+ ctx.strokeStyle='#e4e5e9';ctx.lineWidth=2;ctx.setLineDash([7,7]);[75,300,525].forEach(y=>{ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(900,y);ctx.stroke()});ctx.setLineDash([]);
+ ctx.strokeStyle='#eeeeF1';ctx.lineWidth=1;ctx.setLineDash([4,7]);ctx.beginPath();ctx.moveTo(450,75);ctx.lineTo(450,525);ctx.stroke();ctx.setLineDash([]);
+ ctx.save();ctx.fillStyle='#e1e2e6';ctx.globalAlpha=.65;ctx.font='500 330px sans-serif';ctx.textAlign='center';const isSym=symbolSet.has(key());ctx.textBaseline=isSym?'alphabetic':'middle';ctx.fillText(key(),450,isSym?415:300);ctx.restore();
+}
+function drawSaved(){guide();const arr=state.drawings[key()]||[];arr.forEach(s=>renderShape(s));}
+function renderShape(s){ctx.save();ctx.strokeStyle=s.color;ctx.fillStyle=s.color;ctx.lineWidth=s.size;ctx.lineCap='round';ctx.lineJoin='round';
+ if(s.type==='path'){if(!s.points.length){ctx.restore();return}ctx.beginPath();ctx.moveTo(s.points[0][0],s.points[0][1]);for(let i=1;i<s.points.length;i++)ctx.lineTo(s.points[i][0],s.points[i][1]);if(s.points.length===1){ctx.arc(s.points[0][0],s.points[0][1],s.size/2,0,Math.PI*2);ctx.fill()}else ctx.stroke();}
+ else if(s.type==='rect'){ctx.strokeRect(s.x,s.y,s.w,s.h)}
+ else if(s.type==='circle'){ctx.beginPath();ctx.ellipse(s.x+s.w/2,s.y+s.h/2,Math.abs(s.w/2),Math.abs(s.h/2),0,0,Math.PI*2);ctx.stroke()}
+ ctx.restore();}
+function persist(){try{localStorage.setItem('my-handfont-drawings-v1',JSON.stringify(state.drawings));localStorage.setItem('my-handfont-name-v1',document.getElementById('fontName')?.value||'내 손글씨 폰트');document.getElementById('saveStatus').textContent='✓ 자동 저장됨';lastSave=Date.now()}catch(e){document.getElementById('saveStatus').textContent='저장 공간 부족'}}
+function load(){try{state.drawings=JSON.parse(localStorage.getItem('my-handfont-drawings-v1')||'{}')||{}}catch(e){state.drawings={}}}
+const esc=t=>t.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+function renderGrid(){const arr=categories[state.tab]||consonants;document.getElementById('listLabel').textContent=categoryNames[state.tab]||categoryNames.consonants;document.getElementById('glyphGrid').innerHTML=arr.map(g=>`<button class="glyph ${key()===g?'active':''} ${state.drawings[g]?.length?'done':''}" data-glyph="${esc(g)}">${esc(g)}</button>`).join('');document.querySelectorAll('[data-glyph]').forEach(b=>b.onclick=()=>{state.index=all.indexOf(b.dataset.glyph);state.undo=[];update()});}
+function update(){document.getElementById('currentChar').textContent=key();document.getElementById('currentTitle').textContent=key()+' 디자인하기';const arr=categories[state.tab]||consonants;document.getElementById('currentSub').textContent=(categoryNames[state.tab]||'글자')+' · '+(arr.indexOf(key())+1)+'번째 글자';renderGrid();drawSaved();progress();preview();}
+function progress(){const n=all.filter(g=>state.drawings[g]?.length).length;document.getElementById('progressText').textContent=n+' / '+all.length;document.getElementById('progressBar').style.width=(n/40*100)+'%'}
+function preview(){
+ const input=document.getElementById('wordInput').value;
+ const out=document.getElementById('previewText');out.innerHTML='';
+ for(const ch of input){
+  const c=document.createElement('canvas');c.width=100;c.height=100;
+  c.style.width='1.1em';c.style.height='1.1em';c.style.verticalAlign='middle';c.style.margin='0 .015em';
+  const cc=c.getContext('2d');cc.fillStyle='#fff';cc.fillRect(0,0,100,100);
+  const cp=ch.codePointAt(0);
+  if(cp>=0xAC00&&cp<=0xD7A3){
+   const n=cp-0xAC00, li=Math.floor(n/588), vi=Math.floor((n%588)/28), ti=n%28;
+   const initial=consonants[li], vowel=vowels[vi];
+   const finalParts=ti>0?finalJamoParts(ti):[];
+   const th=syllableThickness([initial,vowel,...finalParts]), lay=syllableLayout(vowel,ti,th);
+   drawJamoInBox(cc,initial,...lay.initial,th);
+   drawJamoInBox(cc,vowel,...lay.vowel,th);
+   finalParts.forEach((f,k)=>drawJamoInBox(cc,f,...lay.finals[k],th));
+  }else if(symbolSet.has(ch)&&state.drawings[ch]?.length){
+   drawSymbolPreview(cc,ch);
+  }else if(state.drawings[ch]?.length){
+   drawJamoInBox(cc,ch,5,5,90,90);
+  }else{
+   cc.fillStyle='#c4c6cc';cc.font='58px sans-serif';cc.textAlign='center';cc.textBaseline='middle';cc.fillText(ch,50,50);
+  }
+  out.appendChild(c);
+ }
+}
+const finalList=['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const finalCompound={'ㄳ':['ㄱ','ㅅ'],'ㄵ':['ㄴ','ㅈ'],'ㄶ':['ㄴ','ㅎ'],'ㄺ':['ㄹ','ㄱ'],'ㄻ':['ㄹ','ㅁ'],'ㄼ':['ㄹ','ㅂ'],'ㄽ':['ㄹ','ㅅ'],'ㄾ':['ㄹ','ㅌ'],'ㄿ':['ㄹ','ㅍ'],'ㅀ':['ㄹ','ㅎ'],'ㅄ':['ㅂ','ㅅ']};
+function finalJamoParts(ti){const f=finalList[ti];return finalCompound[f]||[f]}
+const compoundVowels=['ㅘ','ㅙ','ㅚ','ㅝ','ㅞ','ㅟ','ㅢ'],horizontalVowels=['ㅗ','ㅛ','ㅜ','ㅠ','ㅡ'];
+// 글자 구조(받침 유무, 모음 종류)에 맞춘 배치. 100x100 칸 기준 [x,y,w,h]
+function compoundLayout(vowel,hasT,th){
+ const fb=hasT?{initial:[24,3,52,30],v:[6,34,88,36]}:{initial:[22,4,56,40],v:[6,46,88,42]};
+ const d=strokeCache?strokeCache[vowel]:strokeData(vowel,3);
+ if(!d)return fb;
+ // 모음을 칸 가득 크게 놓고, 모음 획이 지나가지 않는 왼쪽 위 빈 공간을 찾아 자음 자리로 씀
+ const V=hasT?[4,4,92,64]:[4,4,92,88],pad=th/2+1.5,w=Math.max(1,d.maxX-d.minX),h=Math.max(1,d.maxY-d.minY);
+ const sc=Math.min((V[2]-pad*2)/w,(V[3]-pad*2)/h),ox=V[0]+(V[2]-w*sc)/2-d.minX*sc,oy=V[1]+(V[3]-h*sc)/2-d.minY*sc;
+ const G=50,occ=new Uint8Array(G*G),R=Math.ceil((th/2+3)/2);
+ const mark=(x,y)=>{const cx=Math.floor(x/2),cy=Math.floor(y/2);for(let i=-R;i<=R;i++)for(let j=-R;j<=R;j++){const a=cx+i,b=cy+j;if(a>=0&&b>=0&&a<G&&b<G)occ[b*G+a]=1}};
+ d.lines.forEach(l=>{const m=l.map(q=>[q[0]*sc+ox,q[1]*sc+oy]);if(m.length===1)mark(m[0][0],m[0][1]);for(let i=1;i<m.length;i++){const [x1,y1]=m[i-1],[x2,y2]=m[i],n=Math.max(1,Math.ceil(Math.hypot(x2-x1,y2-y1)));for(let k=0;k<=n;k++)mark(x1+(x2-x1)*k/n,y1+(y2-y1)*k/n)}});
+ const S=new Int32Array((G+1)*(G+1));
+ for(let y=0;y<G;y++)for(let x=0;x<G;x++)S[(y+1)*(G+1)+x+1]=occ[y*G+x]+S[y*(G+1)+x+1]+S[(y+1)*(G+1)+x]-S[y*(G+1)+x];
+ const x0=1,y0=1;let best=null,bs=0;
+ for(let ww=6;ww<=G-2;ww++)for(let hh=6;hh<=G-2;hh++){
+  const sum=S[(y0+hh)*(G+1)+x0+ww]-S[y0*(G+1)+x0+ww]-S[(y0+hh)*(G+1)+x0]+S[y0*(G+1)+x0];
+  if(sum)continue;const sc2=Math.min(ww,hh*1.5)*Math.min(hh,ww*1.5);if(sc2>bs){bs=sc2;best={ww,hh}}
+ }
+ if(!best||Math.min(best.ww,best.hh)<8)return fb;
+ return {initial:[x0*2,y0*2,best.ww*2,best.hh*2],v:V};
+}
+function syllableLayout(vowel,ti,th,memo){
+ const hasT=ti>0;let initial,v;
+ if(compoundVowels.includes(vowel)){
+  const key=vowel+(hasT?1:0)+th.toFixed(1);let r=memo&&memo.get(key);
+  if(!r){r=compoundLayout(vowel,hasT,th);if(memo)memo.set(key,r)}
+  initial=r.initial;v=r.v;
+ }
+ else if(horizontalVowels.includes(vowel)){initial=hasT?[12,3,76,32]:[12,5,76,42];v=hasT?[24,36,52,33]:[24,43,52,31];}
+ else{initial=hasT?[5,6,47,62]:[5,10,47,75];v=hasT?[51,6,43,62]:[51,10,43,75];}
+ let finals=[];if(hasT){finals=finalJamoParts(ti).length===1?[[20,72,60,24]]:[[12,73,38,22],[51,73,38,22]];}
+ return {initial,vowel:v,finals};
+}
+// 한 글자 안에서 모든 획 굵기를 똑같이 맞춤 (크기가 달라도 굵기가 들쭉날쭉하지 않게)
+function syllableThickness(parts){let sum=0,n=0;parts.forEach(j=>(state.drawings[j]||[]).forEach(s=>{if(s.color!=='#ffffff'){sum+=s.size;n++}}));return n?Math.min(6,Math.max(2,sum/n*0.22)):3}
+function strokeData(j,minDist=8){
+ const lines=[];
+ (state.drawings[j]||[]).filter(s=>s.color!=='#ffffff').forEach(s=>{
+  if(s.type==='path'){if(s.points.length)lines.push(s.points)}
+  else if(s.type==='rect')lines.push([[s.x,s.y],[s.x+s.w,s.y],[s.x+s.w,s.y+s.h],[s.x,s.y+s.h],[s.x,s.y]]);
+  else if(s.type==='circle'){const a=[];for(let i=0;i<=48;i++){const t=i/48*Math.PI*2;a.push([s.x+s.w/2+Math.cos(t)*s.w/2,s.y+s.h/2+Math.sin(t)*s.h/2])}lines.push(a)}
+ });
+ if(!lines.length)return null;
+ let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+ const simp=lines.map(l=>{const o=[l[0]];for(let i=1;i<l.length;i++){const q=o[o.length-1];if(Math.hypot(l[i][0]-q[0],l[i][1]-q[1])>=minDist||i===l.length-1)o.push(l[i])}return o});
+ simp.forEach(l=>l.forEach(p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1])}));
+ return {lines:simp,minX,maxX,minY,maxY};
+}
+function drawSymbolPreview(c,ch){
+ const d=strokeData(ch,3);if(!d)return;
+ const th=syllableThickness([ch]),cx=(d.minX+d.maxX)/2,map=q=>[50+(q[0]-cx)*0.3,85.7-(415-q[1])*0.3];
+ c.save();c.strokeStyle='#25272c';c.fillStyle='#25272c';c.lineWidth=th;c.lineCap='round';c.lineJoin='round';
+ d.lines.forEach(l=>{const m=l.map(map);if(m.length===1){c.beginPath();c.arc(m[0][0],m[0][1],th/2,0,Math.PI*2);c.fill();return}c.beginPath();c.moveTo(...m[0]);m.slice(1).forEach(q=>c.lineTo(...q));c.stroke()});
+ c.restore();
+}
+function drawJamoInBox(c,jamo,x,y,w,h,th){
+ const shapes=state.drawings[jamo]||[];
+ if(!shapes.length){
+  c.save();c.fillStyle='#c4c6cc';c.font='42px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(jamo,x+w/2,y+h/2);c.restore();return;
+ }
+ // Find the actual drawn bounds, then fit that artwork into the target syllable region.
+ let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+ shapes.forEach(s=>{
+  if(th&&s.color==='#ffffff')return;
+  if(s.type==='path')s.points.forEach(p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1])});
+  else {minX=Math.min(minX,s.x,s.x+s.w);maxX=Math.max(maxX,s.x,s.x+s.w);minY=Math.min(minY,s.y,s.y+s.h);maxY=Math.max(maxY,s.y,s.y+s.h)}
+ });
+ if(!Number.isFinite(minX)||!Number.isFinite(minY)){return}
+ const pad=th?th/2+1.5:3,bw=Math.max(1,maxX-minX),bh=Math.max(1,maxY-minY),scale=Math.min((w-pad*2)/bw,(h-pad*2)/bh);
+ const ox=x+(w-bw*scale)/2-minX*scale,oy=y+(h-bh*scale)/2-minY*scale;
+ shapes.forEach(s=>{
+  const z=JSON.parse(JSON.stringify(s));z.size=th?(s.color==='#ffffff'?th*2.5:th):Math.max(1,s.size*scale);
+  if(z.type==='path')z.points=z.points.map(p=>[p[0]*scale+ox,p[1]*scale+oy]);
+  else {z.x=z.x*scale+ox;z.y=z.y*scale+oy;z.w*=scale;z.h*=scale}
+  drawToContext(c,z);
+ });
+}
+function mapShape(s,ow,oh,nw,nh){const z=JSON.parse(JSON.stringify(s));if(z.type==='path')z.points=z.points.map(p=>[p[0]/ow*nw,p[1]/oh*nh]);else{z.x=z.x/ow*nw;z.y=z.y/oh*nh;z.w=z.w/ow*nw;z.h=z.h/oh*nh}z.size=z.size/ow*nw;return z}
+function drawToContext(c,s){c.save();c.strokeStyle=s.color;c.fillStyle=s.color;c.lineWidth=Math.max(1,s.size);c.lineCap='round';c.lineJoin='round';if(s.type==='path'){if(!s.points.length){c.restore();return}c.beginPath();c.moveTo(...s.points[0]);s.points.slice(1).forEach(p=>c.lineTo(...p));if(s.points.length===1){c.arc(...s.points[0],s.size/2,0,Math.PI*2);c.fill()}else c.stroke()}else if(s.type==='rect')c.strokeRect(s.x,s.y,s.w,s.h);else{c.beginPath();c.ellipse(s.x+s.w/2,s.y+s.h/2,Math.abs(s.w/2),Math.abs(s.h/2),0,0,Math.PI*2);c.stroke()}c.restore()}
+function pos(e){const r=canvas.getBoundingClientRect();return [(e.clientX-r.left)*canvas.width/r.width,(e.clientY-r.top)*canvas.height/r.height]}
+function snapshot(){state.undo.push(JSON.stringify(state.drawings[key()]||[]));if(state.undo.length>40)state.undo.shift()}
+function start(e){e.preventDefault();canvas.setPointerCapture(e.pointerId);const p=pos(e);state.start=p;state.active=true;snapshot();if(!state.drawings[key()])state.drawings[key()]=[];
+ if(state.tool==='pen'||state.tool==='eraser'){state.current={type:'path',points:[p],color:state.tool==='eraser'?'#ffffff':state.color,size:state.tool==='eraser'?Math.max(state.size*3,28):state.size};state.drawings[key()].push(state.current);drawSaved();}else{state.current={type:state.tool,x:p[0],y:p[1],w:0,h:0,color:state.color,size:state.size};}}
+function move(e){if(!state.active)return;const p=pos(e);if(state.tool==='pen'||state.tool==='eraser'){state.current.points.push(p);drawSaved()}else{drawSaved();renderShape({...state.current,w:p[0]-state.start[0],h:p[1]-state.start[1]})}}
+function end(e){if(!state.active)return;const p=pos(e);if(state.tool==='rect'||state.tool==='circle'){state.current.w=p[0]-state.start[0];state.current.h=p[1]-state.start[1];state.drawings[key()].push(state.current);drawSaved()}state.active=false;state.current=null;persist();progress();renderGrid();preview()}
+canvas.addEventListener('pointerdown',start);canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));state.index=all.indexOf((categories[state.tab]||consonants)[0]);state.undo=[];update()});
+document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{state.tool=b.dataset.tool;document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('active',x===b))});
+state.color='#25272c';
+document.getElementById('brushSize').oninput=e=>state.size=+e.target.value;
+document.getElementById('undoBtn').onclick=()=>{if(state.undo.length){state.drawings[key()]=JSON.parse(state.undo.pop());drawSaved();persist();progress();renderGrid();preview()}};
+document.getElementById('clearBtn').onclick=()=>{snapshot();state.drawings[key()]=[];drawSaved();persist();progress();renderGrid();preview()};
+document.getElementById('wordInput').oninput=preview;
+document.getElementById('resetAll').onclick=()=>{if(confirm('모든 글자 디자인을 지울까요?')){state.drawings={};state.undo=[];persist();update()}};
+function outlineForChar(ch,idx){
+ const Path=opentype.Path,path=new Path(),shapes=state.drawings[ch]||[];
+ if(!shapes.length){path.moveTo(80,100);path.lineTo(520,100);path.lineTo(520,600);path.lineTo(80,600);path.close();return path;}
+ const pts=[];shapes.forEach(s=>{if(s.type==='path')s.points.forEach(p=>pts.push(p));else pts.push([s.x,s.y],[s.x+s.w,s.y+s.h]);});
+ if(!pts.length)return path;
+ const minX=Math.min(...pts.map(p=>p[0])),maxX=Math.max(...pts.map(p=>p[0])),minY=Math.min(...pts.map(p=>p[1])),maxY=Math.max(...pts.map(p=>p[1]));
+ const bw=Math.max(1,maxX-minX),bh=Math.max(1,maxY-minY),scale=Math.min(440/bw,500/bh),ox=(600-bw*scale)/2-minX*scale,oy=(700-bh*scale)/2-minY*scale;
+ const fit=p=>[p[0]*scale+ox,700-(p[1]*scale+oy)];
+ function poly(points,size=8){if(points.length<2)return;for(let i=1;i<points.length;i++){let [x1,y1]=fit(points[i-1]),[x2,y2]=fit(points[i]),dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy)||1,r=Math.max(1,Math.min(7,size*scale/2)),px=-dy/len*r,py=dx/len*r;path.moveTo(x1+px,y1+py);path.lineTo(x2+px,y2+py);path.lineTo(x2-px,y2-py);path.lineTo(x1-px,y1-py);path.close();}}
+ shapes.forEach(s=>{if(s.type==='path')poly(s.points,s.size);else if(s.type==='rect')poly([[s.x,s.y],[s.x+s.w,s.y],[s.x+s.w,s.y+s.h],[s.x,s.y+s.h],[s.x,s.y]],s.size);else if(s.type==='circle'){const a=[];for(let i=0;i<=48;i++){const t=i/48*Math.PI*2;a.push([s.x+s.w/2+Math.cos(t)*s.w/2,s.y+s.h/2+Math.sin(t)*s.h/2]);}poly(a,s.size);}});
+ return path;
+}
+let strokeCache=null;
+function addLine(path,pts,map,r){
+ const m=pts.map(map);
+ const dot=(x,y)=>{for(let k=0;k<8;k++){const a=-k*Math.PI/4,px=x+r*Math.cos(a),py=y+r*Math.sin(a);if(k)path.lineTo(px,py);else path.moveTo(px,py)}path.close()};
+ for(let i=0;i<m.length;i++){dot(m[i][0],m[i][1]);if(i){const [x1,y1]=m[i-1],[x2,y2]=m[i],dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);if(len<.01)continue;const px=-dy/len*r,py=dx/len*r;path.moveTo(x1+px,y1+py);path.lineTo(x2+px,y2+py);path.lineTo(x2-px,y2-py);path.lineTo(x1-px,y1-py);path.close()}}
+}
+function placeJamo(path,j,box,r){
+ const c=strokeCache?strokeCache[j]:strokeData(j);if(!c)return;
+ const [bx,by,bw,bh]=box,pad=r/7+1.5,w=Math.max(1,c.maxX-c.minX),h=Math.max(1,c.maxY-c.minY),sc=Math.min((bw-pad*2)/w,(bh-pad*2)/h),ox=bx+(bw-w*sc)/2-c.minX*sc,oy=by+(bh-h*sc)/2-c.minY*sc;
+ const map=q=>[(q[0]*sc+ox)*7,770-(q[1]*sc+oy)*7];
+ c.lines.forEach(l=>addLine(path,l,map,r));
+}
+// 기호는 가이드 위치/크기 그대로 반영 (점이 커지지 않게)
+function outlineForSymbol(ch){
+ const path=new opentype.Path(),c=strokeData(ch);if(!c)return path;
+ const r=syllableThickness([ch])*3.5,cx=(c.minX+c.maxX)/2,map=q=>[325+(q[0]-cx)*2.1,100+(415-q[1])*2.1];
+ c.lines.forEach(l=>addLine(path,l,map,r));return path;
+}
+function downloadFont(){if(!window.opentype){alert('글꼴 생성 라이브러리를 불러오지 못했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.');return}
+ try{
+  const glyphs=[];const notdef=new opentype.Glyph({name:'.notdef',unicode:0,advanceWidth:650,path:new opentype.Path()});glyphs.push(notdef);
+  // Store the 40 designed jamo as font characters. The glyph outlines are generated from the drawing strokes.
+  all.forEach((ch,i)=>{const path=symbolSet.has(ch)?outlineForSymbol(ch):outlineForChar(ch,i);glyphs.push(new opentype.Glyph({name:'uni'+ch.charCodeAt(0).toString(16).toUpperCase(),unicode:ch.charCodeAt(0),advanceWidth:650,path}))});
+  // Include a useful Hangul syllable subset, composed from the drawn consonant/vowel outlines.
+  const L=consonants, V=vowels, T=['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+  const jamoIndex=new Map(jamo.map((c,i)=>[c,i]));
+  const layoutMemo=new Map();strokeCache={};jamo.forEach(j=>{strokeCache[j]=strokeData(j)});
+  function addComposed(ch,li,vi,ti){const p=new opentype.Path(),ini=L[li],vow=V[vi],fin=ti?finalJamoParts(ti):[],thk=syllableThickness([ini,vow,...fin]),lay=syllableLayout(vow,ti,thk,layoutMemo),r=thk*3.5;
+   placeJamo(p,ini,lay.initial,r);placeJamo(p,vow,lay.vowel,r);fin.forEach((f,k)=>placeJamo(p,f,lay.finals[k],r));
+   glyphs.push(new opentype.Glyph({name:'uni'+ch.charCodeAt(0).toString(16).toUpperCase(),unicode:ch.charCodeAt(0),advanceWidth:700,path:p}))}
+  for(let li=0;li<19;li++)for(let vi=0;vi<21;vi++)for(let ti=0;ti<T.length;ti++){const code=0xAC00+(li*21+vi)*28+ti;addComposed(String.fromCharCode(code),li,vi,ti)}
+  strokeCache=null;
+  const familyName=(document.getElementById('fontName').value.trim()||'내 손글씨 폰트').replace(/[\\/:*?"<>|]/g,' ').slice(0,60);
+  const font=new opentype.Font({familyName,styleName:'Regular',unitsPerEm:1000,ascender:850,descender:-150,glyphs});
+  const blob=new Blob([font.toArrayBuffer()],{type:'font/otf'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=((familyName.replace(/\\s+/g,'-').replace(/[^\\w가-힣-]/g,'')||'my-font')+'.otf');a.click();URL.revokeObjectURL(url);
+ }catch(e){console.error(e);alert('글꼴 파일을 만드는 중 문제가 생겼어요. 브라우저를 새로고침한 뒤 다시 시도해 주세요.')}}
+document.getElementById('downloadBtn').onclick=downloadFont;document.getElementById('downloadTop').onclick=downloadFont;
+load();try{document.getElementById('fontName').value=localStorage.getItem('my-handfont-name-v1')||'내 손글씨 폰트'}catch(e){}document.getElementById('fontName').addEventListener('input',()=>{try{localStorage.setItem('my-handfont-name-v1',document.getElementById('fontName').value);document.getElementById('saveStatus').textContent='✓ 자동 저장됨'}catch(e){}});update();
+})();
+</script>
+</body></html>
