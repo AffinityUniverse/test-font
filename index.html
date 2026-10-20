@@ -1,284 +1,95 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>내 폰트 만들기</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#6757d9">
+<title>내 폰트 만들기 · 글꼴과 포스터 공방</title>
 <style>
 :root{--ink:#25272c;--muted:#747984;--line:#e5e7eb;--paper:#fff;--bg:#f6f7f9;--accent:#6757d9;--soft:#eeebff}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
-header{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:3}
-.brand{font-weight:800;font-size:19px;letter-spacing:-.7px}.brand span{color:var(--accent)}.topright{display:flex;gap:10px;align-items:center}.save{font-size:12px;color:#737783;margin-right:8px}
-button,select,input{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 12px;color:var(--ink);font-size:13px}button:hover{border-color:#b9b1fa}button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}button:disabled{opacity:.4;cursor:not-allowed}
-.layout{display:grid;grid-template-columns:245px minmax(360px,1fr) 300px;gap:18px;max-width:1500px;margin:22px auto;padding:0 20px}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden;min-width:0}.panelhead{padding:17px 18px;border-bottom:1px solid var(--line)}h2{font-size:15px;margin:0 0 5px;letter-spacing:-.3px}.sub{font-size:12px;color:var(--muted);line-height:1.55}.sidebody{padding:14px}.tabs{display:flex;flex-wrap:wrap;background:#f3f4f7;border-radius:9px;padding:3px;gap:3px}.tabs button{border:0;background:transparent;flex:1 1 28%;padding:8px 3px;font-size:11px}.tabs button.active{background:#fff;box-shadow:0 1px 3px #0001;font-weight:700}
-.sectionlabel{font-size:11px;font-weight:800;color:#878b96;letter-spacing:.7px;margin:18px 0 9px}.glyphgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.glyph{aspect-ratio:1;border:1px solid #e1e2ea;border-radius:14px;display:grid;place-items:center;font-size:23px;background:#fff;box-shadow:0 4px 0 #c9c1ff;transform:translateY(-2px);transition:transform .12s,box-shadow .12s}.glyph.active{border:2px solid #d9d5f7;background:#fff;color:var(--ink);box-shadow:0 4px 0 #bcb2ff}.glyph:active{transform:translateY(1px);box-shadow:0 1px 0 #c9c1ff}.glyph.done{box-shadow:0 4px 0 #c9c1ff}.center{display:flex;flex-direction:column;gap:16px}.worktop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.current{display:flex;align-items:center;gap:12px}.currentchar{width:48px;height:48px;background:var(--soft);color:var(--accent);border-radius:12px;display:grid;place-items:center;font-size:29px;font-weight:600}.tools{display:flex;gap:6px;flex-wrap:wrap}.tools button{padding:8px 10px}.tools button.active{background:var(--soft);border-color:#bcb3ff;color:var(--accent)}
-.canvaswrap{padding:16px;background:#fff;border:1px solid var(--line);border-radius:15px}.canvasstage{position:relative;width:100%;height:min(53vh,480px);min-height:300px;background:#fff;border:1px solid #ececf0;border-radius:8px;overflow:hidden}.canvasstage canvas{width:100%;height:100%;display:block;touch-action:none}.canvasnote{display:flex;justify-content:space-between;gap:10px;color:#8a8e98;font-size:11px;padding-top:11px}.toolbarrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.colors{display:flex;gap:7px;align-items:center}.swatch{width:22px;height:22px;padding:0;border-radius:50%;border:2px solid white;box-shadow:0 0 0 1px #ddd}.swatch.selected{box-shadow:0 0 0 2px var(--accent)}input[type=color]{width:30px;height:30px;border:0;padding:0;background:none;cursor:pointer}.rightbody{padding:16px}.previewinput{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px;font-size:14px;outline:none}.previewinput:focus{border-color:var(--accent)}.preview{margin-top:12px;min-height:140px;border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:28px;line-height:1.65;word-break:keep-all;white-space:pre-wrap;background:#fff}.miniinfo{font-size:11px;color:var(--muted);line-height:1.65;margin-top:10px}.progress{height:6px;border-radius:8px;background:#f0f0f3;overflow:hidden;margin:10px 0 5px}.progress div{height:100%;width:0;background:var(--accent);transition:width .2s}.statrow{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}.download{width:100%;margin-top:14px;padding:12px}.smallbtns{display:flex;gap:7px;margin-top:9px}.smallbtns button{flex:1}.notice{background:#fff8e7;color:#785c18;border:1px solid #f3e5b8;padding:10px;border-radius:9px;font-size:11px;line-height:1.6;margin-top:14px}.foot{max-width:1500px;margin:0 auto 25px;padding:0 20px;color:#8a8e98;font-size:11px}
-@media(max-width:1050px){.layout{grid-template-columns:210px minmax(300px,1fr)}.right{grid-column:1/-1}.right .rightbody{display:grid;grid-template-columns:1fr 1fr;gap:14px}.right .panelhead{padding-bottom:12px}}
-@media(max-width:680px){header{padding:0 14px}.layout{display:flex;flex-direction:column;padding:0 10px;margin:12px auto}.layout>.panel:first-child{order:2}.center{order:1}.right{order:3}.glyphgrid{grid-template-columns:repeat(7,1fr)}.glyph{font-size:19px}.canvasstage{height:55vh;min-height:280px}.right .rightbody{display:block}.save{display:none}}
-.modebar{display:flex;gap:8px;max-width:1500px;margin:16px auto 0;padding:0 20px;flex-wrap:wrap}.modebar button.active{background:var(--accent);color:white}.hiddenmode{display:none!important}.customrow{display:flex;gap:6px;margin-top:12px}.customrow input{min-width:0;width:100%;border:1px solid var(--line);border-radius:8px;padding:8px}.customitem{display:flex;gap:5px;align-items:center;margin:6px 0}.customitem button:first-child{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis}.posterlayout{max-width:1350px;margin:18px auto;padding:0 20px;display:grid;grid-template-columns:280px minmax(300px,1fr);gap:16px}.postercontrols{padding:17px;display:grid;gap:10px;align-content:start}.postercontrols label{font-size:12px;color:var(--muted)}.postercontrols input,.postercontrols select,.postercontrols textarea{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px}.postercontrols .inline{display:flex;gap:7px}.postercontrols .inline>*{min-width:0}.posterstage{background:#eee;padding:18px;border-radius:15px;display:flex;justify-content:center;align-items:flex-start;overflow:auto}.posterstage canvas{width:min(100%,600px);height:auto;aspect-ratio:3/4;background:white;touch-action:none;box-shadow:0 8px 22px #0002}.hint{font-size:12px;color:var(--muted);line-height:1.5}@media(max-width:750px){.posterlayout{grid-template-columns:1fr}.posterstage{padding:8px}} 
+button,select,input,textarea{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 12px;color:var(--ink);font-size:13px;white-space:nowrap}button:hover{border-color:#b9b1fa;background:#faf9ff}button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}button.active{background:var(--soft);color:var(--accent);border-color:#c2bafa}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #c8c1ff;outline-offset:2px}[hidden]{display:none!important}
+header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:12px 28px;gap:10px}.brand{font-weight:800;font-size:19px;letter-spacing:-.7px}.brand span{color:var(--accent)}.topright{display:flex;gap:10px;align-items:center}.save{font-size:12px;color:#737783}.modebar{display:flex;align-items:center;gap:8px;max-width:1600px;margin:16px auto;padding:0 20px}.modebar button.active{background:var(--accent);color:white;border-color:var(--accent)}.version{margin-left:auto;font-size:11px;color:var(--muted)}.layout{display:grid;grid-template-columns:245px minmax(360px,1fr) 300px;gap:18px;max-width:1500px;margin:22px auto;padding:0 20px}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden;min-width:0}.panelhead{padding:17px 18px;border-bottom:1px solid var(--line)}h2{font-size:15px;margin:0 0 5px;letter-spacing:-.3px}.sub,.hint{font-size:12px;color:var(--muted);line-height:1.6}.sidebody{padding:14px}.tabs{display:flex;flex-wrap:wrap;background:#f3f4f7;border-radius:9px;padding:3px;gap:3px}.tabs button{border:0;background:transparent;flex:1 1 28%;padding:8px 3px;font-size:11px}.tabs button.active{background:#fff;box-shadow:0 1px 3px #0001;font-weight:700;color:var(--ink)}
+.sectionlabel{font-size:11px;font-weight:800;color:#878b96;letter-spacing:.3px;margin:18px 0 9px}.glyphgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.glyph{aspect-ratio:1;border:1px solid #e1e2ea;border-radius:14px;display:grid;place-items:center;font-size:23px;background:#fff;box-shadow:0 4px 0 #c9c1ff;transform:translateY(-2px);transition:transform .12s,box-shadow .12s;min-width:0;overflow:hidden;padding:5px;position:relative}.glyph.active{border:2px solid #bcb2ff;background:#f7f5ff;color:var(--ink)}.glyph:active{transform:translateY(1px);box-shadow:0 1px 0 #c9c1ff}.glyph.done:after{content:'';position:absolute;right:5px;top:5px;width:5px;height:5px;background:var(--accent);border-radius:50%}.glyph.long{font-size:13px;word-break:keep-all;white-space:normal}.center{display:flex;flex-direction:column;gap:16px}.worktop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.current{display:flex;align-items:center;gap:12px;min-width:0}.currentchar{min-width:48px;max-width:82px;height:48px;padding:0 8px;background:var(--soft);color:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.currentchar.long{font-size:14px}.tools{display:flex;gap:6px;flex-wrap:wrap}.tools button{padding:8px 10px}.canvaswrap{padding:16px;background:#fff;border:1px solid var(--line);border-radius:15px}.canvasstage{position:relative;width:100%;aspect-ratio:3/2;background:#fff;border:1px solid #ececf0;border-radius:8px;overflow:hidden}.canvasstage canvas{width:100%;height:100%;display:block;touch-action:none}.canvasnote{display:flex;justify-content:space-between;gap:10px;color:#8a8e98;font-size:11px;padding-top:11px;flex-wrap:wrap}.toolbarrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.colors{display:flex;gap:7px;align-items:center}input[type=color]{width:32px;height:32px;border:0;padding:0;background:none;cursor:pointer}.rightbody{padding:16px}.previewinput{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px;font-size:14px;outline:none}.previewinput:focus{border-color:var(--accent)}.preview{margin-top:12px;min-height:140px;border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff;overflow:auto}.preview svg{display:block;max-width:100%;height:auto;min-height:100px;margin:auto}.miniinfo{font-size:11px;color:var(--muted);line-height:1.65;margin-top:10px}.progress{height:6px;border-radius:8px;background:#f0f0f3;overflow:hidden;margin:10px 0 5px}.progress div{height:100%;width:0;background:var(--accent);transition:width .2s}.statrow{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);gap:8px}.download{width:100%;margin-top:14px;padding:12px}.foot{max-width:1500px;margin:20px auto;padding:0 20px;color:#8a8e98;font-size:11px;line-height:1.8}.customrow{display:flex;gap:6px;margin-top:12px}.customrow input{min-width:0;width:100%;border:1px solid var(--line);border-radius:8px;padding:8px}.customrow button{flex-shrink:0}.customitem{display:flex;gap:5px;align-items:center;margin:6px 0}.customitem button:first-child{flex:1;min-width:0;text-align:left;overflow:hidden;text-overflow:ellipsis}.customitem button{padding:7px 9px;font-size:12px}details{font-size:12px;line-height:1.7;color:var(--muted)}summary{cursor:pointer;color:var(--ink);font-weight:600}.notice{padding:10px;border-radius:9px;background:#f4f1ff;color:#625591;font-size:11px;line-height:1.6;margin-top:12px}
+.poster{max-width:1600px;margin:0 auto;padding:0 20px}.posterbar{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:12px;flex-wrap:wrap}.posterbar .spacer{flex:1}.posterbar .history{display:flex;gap:5px}.iconbutton{width:40px;height:40px;padding:0;font-size:23px;line-height:1}.posterbar .hint{font-size:11px}.posterbar select{max-width:160px}.postergrid{display:grid;grid-template-columns:66px minmax(300px,1fr) 260px;gap:12px;align-items:start}.toolrail{background:#fff;border:1px solid var(--line);border-radius:14px;padding:7px;display:grid;gap:5px}.toolrail button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border-color:transparent;white-space:normal;font-size:10px}.toolrail button.active{border-color:#c2bafa}.toolrail b{font-size:23px;font-weight:500;height:25px;line-height:25px}.railsep{border-top:1px solid var(--line);margin:3px}
+.boardarea{height:calc(100vh - 242px);min-height:500px;border:1px solid #e2e1e9;border-radius:14px;background-color:#ededf2;background-image:radial-gradient(#d2d0dd 1px,transparent 1px);background-size:16px 16px;position:relative;overflow:hidden}.boardarea>svg{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;outline:none}.boardarea .paper{filter:drop-shadow(0 5px 10px #0002)}.artitem{cursor:move}.inspector{padding:15px;background:#fff;border:1px solid var(--line);border-radius:14px;max-height:calc(100vh - 242px);overflow:auto}.inspector h3{font-size:13px;margin:0 0 10px}.inspector label{font-size:11px;color:var(--muted);display:block;line-height:1.6}.inspector input:not([type=color]),.inspector textarea,.inspector select,.posterbar select{padding:8px;border:1px solid var(--line);border-radius:8px;width:100%;background:#fff;color:var(--ink);font-size:12px}.inspector textarea{resize:vertical;min-height:70px}.propertyrow{display:flex;gap:7px;align-items:center;margin:8px 0}.propertyrow>*{flex:1;min-width:0}.propertyrow .fit{flex:0 0 auto}.propertyrow .colorlabel{display:flex;align-items:center;gap:8px}.inspector .divider{border:0;border-top:1px solid var(--line);margin:15px 0}.palette{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}.palette button{width:23px;height:23px;border-radius:50%;padding:0;box-shadow:inset 0 0 0 1px #0001}.palette button.selected{outline:2px solid var(--accent);outline-offset:2px}.minibuttons{display:flex;gap:5px;flex-wrap:wrap}.minibuttons button{padding:7px 9px;font-size:12px}.layers{display:grid;gap:5px;margin-top:10px;max-height:165px;overflow:auto}.layer{display:flex;gap:7px;align-items:center;min-width:0;width:100%;padding:7px 8px;text-align:left;font-size:12px}.layer span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.eggtray{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}.eggtray button{padding:7px 3px;font-size:11px;overflow:hidden;text-overflow:ellipsis}.eggtray svg{width:40px;height:38px;display:block;margin:auto}.emptyhint{font-size:11px;line-height:1.65;color:var(--muted)}.floatingedit{position:absolute;z-index:4;left:50%;top:15%;transform:translateX(-50%);width:min(420px,92%);padding:12px;background:#fff;border:1px solid #c3bafb;border-radius:12px;box-shadow:0 10px 40px #25204b2b}.floatingedit textarea{width:100%;min-height:80px;resize:vertical;border:1px solid var(--line);border-radius:7px;padding:10px;font-size:18px;line-height:1.5;outline:none}.floatingedit>div{display:flex;align-items:center;justify-content:space-between;margin-top:7px;gap:8px}.floatingedit label{font-size:12px;display:block;margin-bottom:7px}.boardhint{margin:9px 0;font-size:11px;color:var(--muted);text-align:center;line-height:1.6}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);max-width:min(540px,90%);padding:12px 18px;border-radius:12px;background:#2c2940;color:white;font-size:13px;z-index:100;box-shadow:0 5px 20px #0002;line-height:1.6}.storagewarning{margin:12px 20px;padding:10px 14px;border:1px solid #e7bb89;background:#fff6e8;border-radius:10px;font-size:12px}.templategrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}.templategrid button{font-size:11px;padding:8px 4px}.screenreader{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(max-width:1150px){.layout{grid-template-columns:210px minmax(300px,1fr)}.right{grid-column:1/-1}.right .rightbody{display:grid;grid-template-columns:1fr 1fr;gap:16px}.postergrid{grid-template-columns:60px minmax(280px,1fr) 225px}.poster{padding:0 12px}.inspector{padding:12px}.posterbar .hint{display:none}}
+@media(max-width:780px){header{padding:12px 14px}.brand{font-size:16px}.save,.version{display:none}.topright{gap:5px}.topright button{font-size:11px;padding:8px}.modebar{padding:0 10px;margin:12px 0}.layout{display:flex;flex-direction:column;padding:0 10px;margin:12px auto}.layout>.panel:first-child{order:2}.center{order:1}.right{order:3}.glyphgrid{grid-template-columns:repeat(7,1fr)}.glyph{font-size:19px}.right .rightbody{display:block}.canvaswrap{padding:12px}.poster{padding:0 10px}.postergrid{grid-template-columns:1fr;gap:8px}.toolrail{display:flex;overflow:auto;padding:4px}.toolrail button{min-width:48px;padding:6px}.toolrail b{font-size:20px}.railsep{border-top:0;border-left:1px solid var(--line)}.boardarea{height:68vh;min-height:420px}.inspector{max-height:none;display:grid;grid-template-columns:1fr 1fr;gap:12px}.inspector>.divider{display:none}.inspector .fullwidth{grid-column:1/-1}.posterbar{padding:7px;gap:5px}.posterbar select{max-width:110px}.posterbar .spacer{display:none}.posterbar .save{display:none}.iconbutton{width:34px;height:34px}.posterbar .primary{margin-left:auto}.foot{margin:15px auto}.floatingedit{top:7%}}
+@media(max-width:420px){.inspector{display:block}.inspector>.divider{display:block}.glyphgrid{grid-template-columns:repeat(6,1fr)}.posterbar button{font-size:12px}.posterbar .iconbutton{font-size:22px}.tools button{padding:7px 8px;font-size:12px}}
 </style>
 </head>
 <body>
-<header><div class="brand">내 폰트 <span>만들기</span></div><div class="topright"><span class="save" id="saveStatus">자동 저장 준비됨</span><button id="resetAll">초기화</button><button class="primary" id="downloadTop">OTF 글꼴 다운로드 ↗</button></div></header>
-<nav class="modebar"><button class="active" data-mode="font">✎ 폰트 만들기</button><button data-mode="egg">★ 나만의 이스터에그</button><button data-mode="poster">▣ 타이포그래피 포스터</button></nav><main class="layout" id="fontWorkspace">
+<header><div class="brand">내 폰트 <span>만들기</span></div><div class="topright"><span class="save" id="saveStatus">자동 저장 준비됨</span><button id="resetAll">폰트 초기화</button><button class="primary" id="downloadTop">OTF 글꼴 다운로드 ↗</button></div></header>
+<div id="storageWarning" class="storagewarning" hidden></div>
+<nav class="modebar" aria-label="작업 영역"><button class="active" data-mode="font">✎ 폰트 만들기</button><button data-mode="poster">▣ 타이포그래피 포스터</button><span class="version">FONT STUDIO 3.0</span></nav>
+<main class="layout" id="fontWorkspace">
 <section class="panel">
- <div class="panelhead"><h2>글자 목록</h2><div class="sub">한글, 영문, 숫자, 기호를 직접 디자인하세요.</div><div class="progress"><div id="progressBar"></div></div><div class="statrow"><span>완성한 글자</span><b id="progressText">0 / 40</b></div></div>
- <div class="sidebody"><div class="tabs"><button class="active" data-tab="consonants">자음</button><button data-tab="vowels">모음</button><button data-tab="uppercase">영문 대문자</button><button data-tab="lowercase">영문 소문자</button><button data-tab="numbers">숫자</button><button data-tab="symbols">기호</button><button data-tab="custom">나만의 글자</button></div><div id="customManager" style="display:none"><div class="customrow"><input id="customName" maxlength="32" placeholder="예: 치킨, 고양이, ★"><button id="customAdd">추가</button></div><div id="customList"></div><div class="hint">여러 글자 이름은 그림 요소로 저장됩니다. 한 글자 항목만 OTF 문자로 포함할 수 있습니다.</div></div><div class="sectionlabel" id="listLabel">자음 · CONSONANTS</div><div class="glyphgrid" id="glyphGrid"></div><div class="miniinfo">글자를 선택하고 가운데 작업 공간에서 직접 그려 보세요. 작업 내용은 이 브라우저에 자동 저장됩니다.</div></div>
+ <div class="panelhead"><h2>글자 목록</h2><div class="sub">한글, 영문, 숫자, 기호를 직접 디자인하세요.</div><div class="progress"><div id="progressBar"></div></div><div class="statrow"><span>완성한 글자</span><b id="progressText">0 / 116</b></div></div>
+ <div class="sidebody"><div class="tabs" id="categoryTabs"><button class="active" data-tab="consonants">자음</button><button data-tab="vowels">모음</button><button data-tab="uppercase">영문 대문자</button><button data-tab="lowercase">영문 소문자</button><button data-tab="numbers">숫자</button><button data-tab="symbols">기호</button><button data-tab="custom">나만의 글자</button></div>
+ <div id="customManager" hidden><div class="customrow"><input id="customName" maxlength="32" placeholder="예: 치킨, 고양이, ★" aria-label="나만의 글자 이름"><button id="customAdd">추가</button></div><div id="customList"></div><div class="notice"><b>입력한 이름이 그림으로 바뀝니다.</b><br>예: ‘치킨’을 등록하고 그림을 그리면, 미리보기와 OTF에서 ‘치킨’이 그 그림으로 나타납니다.</div></div>
+ <div class="sectionlabel" id="listLabel">자음</div><div class="glyphgrid" id="glyphGrid"></div><button id="openCustom" style="width:100%;margin-top:16px">＋ 나만의 글자 추가</button><div class="miniinfo">작업 내용은 현재 브라우저에 자동 저장됩니다.</div></div>
 </section>
 <section class="center">
- <div class="panel" style="padding:16px 18px"><div class="worktop"><div class="current"><div class="currentchar" id="currentChar">ㄱ</div><div><h2 id="currentTitle">ㄱ 디자인하기</h2><div class="sub" id="currentSub">자음 · 1번째 글자</div></div></div><div class="tools"><button data-tool="pen" class="active">✎ 펜</button><button data-tool="eraser">⌫ 지우개</button><button data-tool="rect">□ 네모</button><button data-tool="circle">○ 동그라미</button></div></div></div>
- <div class="canvaswrap"><div class="toolbarrow"><div class="colors"><span class="sub">색상</span><span class="swatch selected" style="background:#25272c;display:inline-block" aria-label="검정색"></span><span class="sub">검정색</span></div><div class="tools"><button id="undoBtn">↶ 되돌리기</button><button id="clearBtn">전체 지우기</button></div></div>
- <div class="canvasstage"><canvas id="drawCanvas" width="900" height="600"></canvas></div><div class="canvasnote"><span>회색 가이드를 참고해 자유롭게 그려 보세요.</span><span>선 굵기 <input id="brushSize" type="range" min="3" max="28" value="12" style="width:75px;vertical-align:middle"></span></div></div>
+ <div class="panel" style="padding:16px 18px"><div class="worktop"><div class="current"><div class="currentchar" id="currentChar">ㄱ</div><div><h2 id="currentTitle">ㄱ 디자인하기</h2><div class="sub" id="currentSub">자음</div></div></div><div class="tools"><button data-tool="pen" class="active">✎ 펜</button><button data-tool="eraser">⌫ 지우개</button><button data-tool="rect">□ 네모</button><button data-tool="circle">○ 동그라미</button></div></div></div>
+ <div class="canvaswrap"><div class="toolbarrow"><div class="colors"><label class="sub" for="inkColor">색상</label><input id="inkColor" type="color" value="#25272c" title="그리기 색상"></div><div class="tools"><button id="undoBtn" title="그림 실행 취소">↶ 되돌리기</button><button id="redoBtn" title="그림 다시 실행">↷</button><button id="clearBtn">전체 지우기</button></div></div>
+ <div class="canvasstage"><canvas id="drawCanvas" width="900" height="600" aria-label="선택한 글자를 그리는 작업 공간"></canvas></div><div class="canvasnote"><span>OTF는 단색 글꼴입니다. 색상은 포스터에서 바꿀 수 있어요.</span><label>선 굵기 <input id="brushSize" type="range" min="3" max="40" value="12" style="width:75px;vertical-align:middle"></label></div></div>
 </section>
 <section class="panel right">
- <div class="panelhead"><h2>내 글꼴 미리보기</h2><div class="sub">단어를 입력하면 직접 만든 글자들이 조합돼요.</div></div>
- <div class="rightbody"><div><input class="previewinput" id="wordInput" value="" placeholder="미리 볼 단어를 입력하세요"><div class="preview" id="previewText"></div></div><div><div class="sectionlabel" style="margin-top:4px">글꼴 정보</div><label class="sub" for="fontName" style="display:block;margin-bottom:6px">내가 만든 폰트 이름</label><input class="previewinput" id="fontName" value="내 손글씨 폰트" placeholder="폰트 이름을 입력하세요"><div class="statrow" style="margin-top:12px"><span>문자 세트</span><b>한글 완성형</b></div><button class="primary download" id="downloadBtn">OTF 글꼴 다운로드</button></div></div>
+ <div class="panelhead"><h2>내 글꼴 미리보기</h2><div class="sub">만든 글자와 이스터에그가 바로 적용됩니다.</div></div>
+ <div class="rightbody"><div><input class="previewinput" id="wordInput" placeholder="예: 치킨 별" aria-label="미리보기 문구"><div class="preview" id="previewText"></div><div class="miniinfo" id="previewNotice">아직 만들지 않은 글자는 회색 안내 글자로 표시됩니다.</div><button id="sendToPoster" style="margin-top:10px;width:100%">이 문구로 포스터 만들기 ↗</button></div>
+ <div><div class="sectionlabel" style="margin-top:12px">글꼴 정보</div><label class="sub" for="fontName" style="display:block;margin-bottom:6px">내가 만든 폰트 이름</label><input class="previewinput" id="fontName" value="내 손글씨 폰트" placeholder="폰트 이름을 입력하세요"><div class="statrow" style="margin-top:12px"><span>문자 세트</span><b>한글 조합 + 나만의 글자</b></div><button class="primary download" id="downloadBtn">OTF 글꼴 다운로드</button><details style="margin-top:12px"><summary>Affinity에서 사용하는 방법</summary><p>다운로드한 OTF를 설치한 다음, Affinity의 글꼴 목록에서 지정한 폰트 이름을 선택합니다. ‘치킨’처럼 등록한 이름을 입력합니다.</p><p>그림으로 바뀌지 않으면 텍스트의 타이포그래피 설정에서 합자(Ligatures)를 켭니다. 여러 글자에 같은 글꼴을 적용하고 자간을 0으로 먼저 확인합니다.</p><p>수정한 폰트가 반영되지 않으면 폰트 이름을 바꿔 다시 다운로드·설치합니다. 혼합 언어, 이모지 조합, 프로그램의 조판 방식에 따라 치환 결과가 달라질 수 있습니다.</p><p>등록된 이름은 다른 단어 안에서도 치환됩니다. 회색 안내 글자와 다색 표현은 OTF에 포함되지 않습니다.</p></details></div></div>
 </section>
-</main><section class="posterlayout hiddenmode" id="posterWorkspace"><div class="panel postercontrols"><h2>포스터 꾸미기</h2><label>문구 입력<textarea id="posterText" rows="3">나만의 글자로 만드는 포스터</textarea></label><div class="inline"><label>글자 크기<input type="range" id="posterSize" min="24" max="160" value="65"></label><label>글자 간격<input type="range" id="posterSpacing" min="0" max="30" value="3"></label></div><div class="inline"><label>글자 색<input type="color" id="posterColor" value="#25272c"></label><label>배경 색<input type="color" id="posterBg" value="#ffffff"></label></div><label>글자 정렬<select id="posterAlign"><option value="center">가운데</option><option value="left">왼쪽</option><option value="right">오른쪽</option></select></label><label>배경 패턴<select id="posterPattern"><option value="none">없음</option><option value="dots">도트</option><option value="grid">격자</option></select></label><div class="inline"><button id="posterTextAdd">문구 추가</button><button id="posterFont">내 폰트 적용</button></div><div class="inline"><button data-shape="star">★ 별</button><button data-shape="heart">♥ 하트</button><button data-shape="circle">● 원</button><button data-shape="square">■ 네모</button></div><label>이스터에그 추가<select id="posterEgg"></select></label><button id="posterEggAdd">그림 추가</button><label>선택 요소 크기<input type="range" id="elementScale" min="20" max="300" value="100"></label><label>선택 요소 회전<input type="range" id="elementRotation" min="-180" max="180" value="0"></label><div class="inline"><button id="posterDelete">선택 삭제</button><button id="posterUndo">↶ 실행 취소</button><button id="posterRedo">↷ 다시 실행</button></div><div class="inline"><button id="posterSave">파일로 저장</button><button id="posterLoad">파일 불러오기</button><input type="file" id="posterFile" accept=".json,application/json" hidden></div><div class="inline"><button class="primary" id="posterPng">PNG 저장 (1800×2400)</button></div><div class="hint">요소를 손가락이나 마우스로 끌어 이동하세요. 저장 내용은 브라우저에도 자동 보관됩니다. 문구의 미제작 글자는 기본 글꼴로 표시됩니다.</div></div><div class="posterstage"><canvas id="posterCanvas" width="900" height="1200"></canvas></div></section><div class="foot">내 글꼴 공방 · 개인 작업은 현재 브라우저에 저장됩니다. 브라우저 데이터 삭제 시 작업이 사라질 수 있어요.</div>
-<script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
-<script>
-(() => {
-const consonants=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
-const vowels=['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
-const jamo=[...consonants,...vowels];
-const symbols=['.',',','!','?','~','-','(',')',':',';','/','@',"'",'"'];const symbolSet=new Set(symbols);
- const categories={consonants,vowels,uppercase:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),lowercase:'abcdefghijklmnopqrstuvwxyz'.split(''),numbers:'0123456789'.split(''),symbols,custom:[]};
- const all=[...jamo,...categories.uppercase,...categories.lowercase,...categories.numbers,...symbols];
- const categoryNames={consonants:'자음 · CONSONANTS',vowels:'모음 · VOWELS',uppercase:'영문 대문자 · UPPERCASE',lowercase:'영문 소문자 · LOWERCASE',numbers:'숫자 · NUMBERS',symbols:'기호 · SYMBOLS',custom:'나만의 글자 · CUSTOM'};
- const state={drawings:{},tab:'consonants',index:0,tool:'pen',color:'#25272c',size:12,undo:[],active:false,start:null};
-const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d'); let lastSave=0;
-const key=()=>all[state.index]||'ㄱ', glyphKey=(g)=>'handfont-v1-'+g;
-function guide(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
- // Very light gray writing lines and a faint model glyph for students to trace.
- ctx.strokeStyle='#e4e5e9';ctx.lineWidth=2;ctx.setLineDash([7,7]);[75,300,525].forEach(y=>{ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(900,y);ctx.stroke()});ctx.setLineDash([]);
- ctx.strokeStyle='#eeeeF1';ctx.lineWidth=1;ctx.setLineDash([4,7]);ctx.beginPath();ctx.moveTo(450,75);ctx.lineTo(450,525);ctx.stroke();ctx.setLineDash([]);
- ctx.save();ctx.fillStyle='#e1e2e6';ctx.globalAlpha=.65;ctx.font='500 330px sans-serif';ctx.textAlign='center';const isSym=symbolSet.has(key());ctx.textBaseline=isSym?'alphabetic':'middle';if(state.tab!=='custom')ctx.fillText(key(),450,isSym?415:300);ctx.restore();
-}
-function drawSaved(){guide();const arr=state.drawings[key()]||[];arr.forEach(s=>renderShape(s));}
-function renderShape(s){ctx.save();ctx.strokeStyle=s.color;ctx.fillStyle=s.color;ctx.lineWidth=s.size;ctx.lineCap='round';ctx.lineJoin='round';
- if(s.type==='path'){if(!s.points.length){ctx.restore();return}ctx.beginPath();ctx.moveTo(s.points[0][0],s.points[0][1]);for(let i=1;i<s.points.length;i++)ctx.lineTo(s.points[i][0],s.points[i][1]);if(s.points.length===1){ctx.arc(s.points[0][0],s.points[0][1],s.size/2,0,Math.PI*2);ctx.fill()}else ctx.stroke();}
- else if(s.type==='rect'){ctx.strokeRect(s.x,s.y,s.w,s.h)}
- else if(s.type==='circle'){ctx.beginPath();ctx.ellipse(s.x+s.w/2,s.y+s.h/2,Math.abs(s.w/2),Math.abs(s.h/2),0,0,Math.PI*2);ctx.stroke()}
- ctx.restore();}
-function persist(){try{localStorage.setItem('my-handfont-drawings-v1',JSON.stringify(state.drawings));localStorage.setItem('my-handfont-name-v1',document.getElementById('fontName')?.value||'내 손글씨 폰트');document.getElementById('saveStatus').textContent='✓ 자동 저장됨';lastSave=Date.now()}catch(e){document.getElementById('saveStatus').textContent='저장 공간 부족'}}
-function load(){try{state.drawings=JSON.parse(localStorage.getItem('my-handfont-drawings-v1')||'{}')||{}}catch(e){state.drawings={}}}
-const esc=t=>t.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-function renderGrid(){const arr=categories[state.tab]||consonants;document.getElementById('listLabel').textContent=categoryNames[state.tab]||categoryNames.consonants;document.getElementById('glyphGrid').innerHTML=arr.map(g=>`<button class="glyph ${key()===g?'active':''} ${state.drawings[g]?.length?'done':''}" data-glyph="${esc(g)}">${esc(g)}</button>`).join('');document.querySelectorAll('[data-glyph]').forEach(b=>b.onclick=()=>{state.index=all.indexOf(b.dataset.glyph);state.undo=[];update()});}
-function update(){document.getElementById('currentChar').textContent=key();document.getElementById('currentTitle').textContent=key()+' 디자인하기';const arr=categories[state.tab]||consonants;document.getElementById('currentSub').textContent=(categoryNames[state.tab]||'글자')+' · '+(arr.indexOf(key())+1)+'번째 글자';renderGrid();drawSaved();progress();preview();}
-function progress(){const n=all.filter(g=>state.drawings[g]?.length).length;document.getElementById('progressText').textContent=n+' / '+all.length;document.getElementById('progressBar').style.width=(n/all.length*100)+'%'}
-function preview(){
- const input=document.getElementById('wordInput').value;
- const out=document.getElementById('previewText');out.innerHTML='';
- for(const ch of input){
-  const c=document.createElement('canvas');c.width=100;c.height=100;
-  c.style.width='1.1em';c.style.height='1.1em';c.style.verticalAlign='middle';c.style.margin='0 .015em';
-  const cc=c.getContext('2d');cc.fillStyle='#fff';cc.fillRect(0,0,100,100);
-  const cp=ch.codePointAt(0);
-  if(cp>=0xAC00&&cp<=0xD7A3){
-   const n=cp-0xAC00, li=Math.floor(n/588), vi=Math.floor((n%588)/28), ti=n%28;
-   const initial=consonants[li], vowel=vowels[vi];
-   const finalParts=ti>0?finalJamoParts(ti):[];
-   const th=syllableThickness([initial,vowel,...finalParts]), lay=syllableLayout(vowel,ti,th);
-   drawJamoInBox(cc,initial,...lay.initial,th);
-   drawJamoInBox(cc,vowel,...lay.vowel,th);
-   finalParts.forEach((f,k)=>drawJamoInBox(cc,f,...lay.finals[k],th));
-  }else if(symbolSet.has(ch)&&state.drawings[ch]?.length){
-   drawSymbolPreview(cc,ch);
-  }else if(state.drawings[ch]?.length){
-   drawJamoInBox(cc,ch,5,5,90,90);
-  }else{
-   cc.fillStyle='#c4c6cc';cc.font='58px sans-serif';cc.textAlign='center';cc.textBaseline='middle';cc.fillText(ch,50,50);
-  }
-  out.appendChild(c);
- }
-}
-const finalList=['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
-const finalCompound={'ㄳ':['ㄱ','ㅅ'],'ㄵ':['ㄴ','ㅈ'],'ㄶ':['ㄴ','ㅎ'],'ㄺ':['ㄹ','ㄱ'],'ㄻ':['ㄹ','ㅁ'],'ㄼ':['ㄹ','ㅂ'],'ㄽ':['ㄹ','ㅅ'],'ㄾ':['ㄹ','ㅌ'],'ㄿ':['ㄹ','ㅍ'],'ㅀ':['ㄹ','ㅎ'],'ㅄ':['ㅂ','ㅅ']};
-function finalJamoParts(ti){const f=finalList[ti];return finalCompound[f]||[f]}
-const compoundVowels=['ㅘ','ㅙ','ㅚ','ㅝ','ㅞ','ㅟ','ㅢ'],horizontalVowels=['ㅗ','ㅛ','ㅜ','ㅠ','ㅡ'];
-// 글자 구조(받침 유무, 모음 종류)에 맞춘 배치. 100x100 칸 기준 [x,y,w,h]
-function compoundLayout(vowel,hasT,th){
- const fb=hasT?{initial:[24,3,52,30],v:[6,34,88,36]}:{initial:[22,4,56,40],v:[6,46,88,42]};
- const d=strokeCache?strokeCache[vowel]:strokeData(vowel,3);
- if(!d)return fb;
- // 모음을 칸 가득 크게 놓고, 모음 획이 지나가지 않는 왼쪽 위 빈 공간을 찾아 자음 자리로 씀
- const V=hasT?[4,4,92,64]:[4,4,92,88],pad=th/2+1.5,w=Math.max(1,d.maxX-d.minX),h=Math.max(1,d.maxY-d.minY);
- const sc=Math.min((V[2]-pad*2)/w,(V[3]-pad*2)/h),ox=V[0]+(V[2]-w*sc)/2-d.minX*sc,oy=V[1]+(V[3]-h*sc)/2-d.minY*sc;
- const G=50,occ=new Uint8Array(G*G),R=Math.ceil((th/2+3)/2);
- const mark=(x,y)=>{const cx=Math.floor(x/2),cy=Math.floor(y/2);for(let i=-R;i<=R;i++)for(let j=-R;j<=R;j++){const a=cx+i,b=cy+j;if(a>=0&&b>=0&&a<G&&b<G)occ[b*G+a]=1}};
- d.lines.forEach(l=>{const m=l.map(q=>[q[0]*sc+ox,q[1]*sc+oy]);if(m.length===1)mark(m[0][0],m[0][1]);for(let i=1;i<m.length;i++){const [x1,y1]=m[i-1],[x2,y2]=m[i],n=Math.max(1,Math.ceil(Math.hypot(x2-x1,y2-y1)));for(let k=0;k<=n;k++)mark(x1+(x2-x1)*k/n,y1+(y2-y1)*k/n)}});
- const S=new Int32Array((G+1)*(G+1));
- for(let y=0;y<G;y++)for(let x=0;x<G;x++)S[(y+1)*(G+1)+x+1]=occ[y*G+x]+S[y*(G+1)+x+1]+S[(y+1)*(G+1)+x]-S[y*(G+1)+x];
- const x0=1,y0=1;let best=null,bs=0;
- for(let ww=6;ww<=G-2;ww++)for(let hh=6;hh<=G-2;hh++){
-  const sum=S[(y0+hh)*(G+1)+x0+ww]-S[y0*(G+1)+x0+ww]-S[(y0+hh)*(G+1)+x0]+S[y0*(G+1)+x0];
-  if(sum)continue;const sc2=Math.min(ww,hh*1.5)*Math.min(hh,ww*1.5);if(sc2>bs){bs=sc2;best={ww,hh}}
- }
- if(!best||Math.min(best.ww,best.hh)<8)return fb;
- return {initial:[x0*2,y0*2,best.ww*2,best.hh*2],v:V};
-}
-function syllableLayout(vowel,ti,th,memo){
- const hasT=ti>0;let initial,v;
- if(compoundVowels.includes(vowel)){
-  const key=vowel+(hasT?1:0)+th.toFixed(1);let r=memo&&memo.get(key);
-  if(!r){r=compoundLayout(vowel,hasT,th);if(memo)memo.set(key,r)}
-  initial=r.initial;v=r.v;
- }
- else if(horizontalVowels.includes(vowel)){initial=hasT?[12,3,76,32]:[12,5,76,42];v=hasT?[24,36,52,33]:[24,43,52,31];}
- else{initial=hasT?[5,6,47,62]:[5,10,47,75];v=hasT?[51,6,43,62]:[51,10,43,75];}
- let finals=[];if(hasT){finals=finalJamoParts(ti).length===1?[[20,72,60,24]]:[[12,73,38,22],[51,73,38,22]];}
- return {initial,vowel:v,finals};
-}
-// 한 글자 안에서 모든 획 굵기를 똑같이 맞춤 (크기가 달라도 굵기가 들쭉날쭉하지 않게)
-function syllableThickness(parts){let sum=0,n=0;parts.forEach(j=>(state.drawings[j]||[]).forEach(s=>{if(s.color!=='#ffffff'){sum+=s.size;n++}}));return n?Math.min(6,Math.max(2,sum/n*0.22)):3}
-function strokeData(j,minDist=8){
- const lines=[];
- (state.drawings[j]||[]).filter(s=>s.color!=='#ffffff').forEach(s=>{
-  if(s.type==='path'){if(s.points.length)lines.push(s.points)}
-  else if(s.type==='rect')lines.push([[s.x,s.y],[s.x+s.w,s.y],[s.x+s.w,s.y+s.h],[s.x,s.y+s.h],[s.x,s.y]]);
-  else if(s.type==='circle'){const a=[];for(let i=0;i<=48;i++){const t=i/48*Math.PI*2;a.push([s.x+s.w/2+Math.cos(t)*s.w/2,s.y+s.h/2+Math.sin(t)*s.h/2])}lines.push(a)}
- });
- if(!lines.length)return null;
- let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
- const simp=lines.map(l=>{const o=[l[0]];for(let i=1;i<l.length;i++){const q=o[o.length-1];if(Math.hypot(l[i][0]-q[0],l[i][1]-q[1])>=minDist||i===l.length-1)o.push(l[i])}return o});
- simp.forEach(l=>l.forEach(p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1])}));
- return {lines:simp,minX,maxX,minY,maxY};
-}
-function drawSymbolPreview(c,ch){
- const d=strokeData(ch,3);if(!d)return;
- const th=syllableThickness([ch]),cx=(d.minX+d.maxX)/2,map=q=>[50+(q[0]-cx)*0.3,85.7-(415-q[1])*0.3];
- c.save();c.strokeStyle='#25272c';c.fillStyle='#25272c';c.lineWidth=th;c.lineCap='round';c.lineJoin='round';
- d.lines.forEach(l=>{const m=l.map(map);if(m.length===1){c.beginPath();c.arc(m[0][0],m[0][1],th/2,0,Math.PI*2);c.fill();return}c.beginPath();c.moveTo(...m[0]);m.slice(1).forEach(q=>c.lineTo(...q));c.stroke()});
- c.restore();
-}
-function drawJamoInBox(c,jamo,x,y,w,h,th){
- const shapes=state.drawings[jamo]||[];
- if(!shapes.length){
-  c.save();c.fillStyle='#c4c6cc';c.font='42px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(jamo,x+w/2,y+h/2);c.restore();return;
- }
- // Find the actual drawn bounds, then fit that artwork into the target syllable region.
- let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
- shapes.forEach(s=>{
-  if(th&&s.color==='#ffffff')return;
-  if(s.type==='path')s.points.forEach(p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1])});
-  else {minX=Math.min(minX,s.x,s.x+s.w);maxX=Math.max(maxX,s.x,s.x+s.w);minY=Math.min(minY,s.y,s.y+s.h);maxY=Math.max(maxY,s.y,s.y+s.h)}
- });
- if(!Number.isFinite(minX)||!Number.isFinite(minY)){return}
- const pad=th?th/2+1.5:3,bw=Math.max(1,maxX-minX),bh=Math.max(1,maxY-minY),scale=Math.min((w-pad*2)/bw,(h-pad*2)/bh);
- const ox=x+(w-bw*scale)/2-minX*scale,oy=y+(h-bh*scale)/2-minY*scale;
- shapes.forEach(s=>{
-  const z=JSON.parse(JSON.stringify(s));z.size=th?(s.color==='#ffffff'?th*2.5:th):Math.max(1,s.size*scale);
-  if(z.type==='path')z.points=z.points.map(p=>[p[0]*scale+ox,p[1]*scale+oy]);
-  else {z.x=z.x*scale+ox;z.y=z.y*scale+oy;z.w*=scale;z.h*=scale}
-  drawToContext(c,z);
- });
-}
-function mapShape(s,ow,oh,nw,nh){const z=JSON.parse(JSON.stringify(s));if(z.type==='path')z.points=z.points.map(p=>[p[0]/ow*nw,p[1]/oh*nh]);else{z.x=z.x/ow*nw;z.y=z.y/oh*nh;z.w=z.w/ow*nw;z.h=z.h/oh*nh}z.size=z.size/ow*nw;return z}
-function drawToContext(c,s){c.save();c.strokeStyle=s.color;c.fillStyle=s.color;c.lineWidth=Math.max(1,s.size);c.lineCap='round';c.lineJoin='round';if(s.type==='path'){if(!s.points.length){c.restore();return}c.beginPath();c.moveTo(...s.points[0]);s.points.slice(1).forEach(p=>c.lineTo(...p));if(s.points.length===1){c.arc(...s.points[0],s.size/2,0,Math.PI*2);c.fill()}else c.stroke()}else if(s.type==='rect')c.strokeRect(s.x,s.y,s.w,s.h);else{c.beginPath();c.ellipse(s.x+s.w/2,s.y+s.h/2,Math.abs(s.w/2),Math.abs(s.h/2),0,0,Math.PI*2);c.stroke()}c.restore()}
-function pos(e){const r=canvas.getBoundingClientRect();return [(e.clientX-r.left)*canvas.width/r.width,(e.clientY-r.top)*canvas.height/r.height]}
-function snapshot(){state.undo.push(JSON.stringify(state.drawings[key()]||[]));if(state.undo.length>40)state.undo.shift()}
-function start(e){e.preventDefault();canvas.setPointerCapture(e.pointerId);const p=pos(e);state.start=p;state.active=true;snapshot();if(!state.drawings[key()])state.drawings[key()]=[];
- if(state.tool==='pen'||state.tool==='eraser'){state.current={type:'path',points:[p],color:state.tool==='eraser'?'#ffffff':state.color,size:state.tool==='eraser'?Math.max(state.size*3,28):state.size};state.drawings[key()].push(state.current);drawSaved();}else{state.current={type:state.tool,x:p[0],y:p[1],w:0,h:0,color:state.color,size:state.size};}}
-function move(e){if(!state.active)return;const p=pos(e);if(state.tool==='pen'||state.tool==='eraser'){state.current.points.push(p);drawSaved()}else{drawSaved();renderShape({...state.current,w:p[0]-state.start[0],h:p[1]-state.start[1]})}}
-function end(e){if(!state.active)return;const p=pos(e);if(state.tool==='rect'||state.tool==='circle'){state.current.w=p[0]-state.start[0];state.current.h=p[1]-state.start[1];state.drawings[key()].push(state.current);drawSaved()}state.active=false;state.current=null;persist();progress();renderGrid();preview()}
-canvas.addEventListener('pointerdown',start);canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
-document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;document.getElementById('customManager').style.display=state.tab==='custom'?'block':'none';document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));state.index=all.indexOf((categories[state.tab]||consonants)[0]);if(state.index<0)state.index=0;state.undo=[];update()});
-document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{state.tool=b.dataset.tool;document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('active',x===b))});
-state.color='#25272c';
-document.getElementById('brushSize').oninput=e=>state.size=+e.target.value;
-document.getElementById('undoBtn').onclick=()=>{if(state.undo.length){state.drawings[key()]=JSON.parse(state.undo.pop());drawSaved();persist();progress();renderGrid();preview()}};
-document.getElementById('clearBtn').onclick=()=>{snapshot();state.drawings[key()]=[];drawSaved();persist();progress();renderGrid();preview()};
-document.getElementById('wordInput').oninput=preview;
-document.getElementById('resetAll').onclick=()=>{if(confirm('모든 글자 디자인을 지울까요?')){state.drawings={};state.undo=[];persist();update()}};
-function outlineForChar(ch,idx){
- const Path=opentype.Path,path=new Path(),shapes=state.drawings[ch]||[];
- if(!shapes.length){path.moveTo(80,100);path.lineTo(520,100);path.lineTo(520,600);path.lineTo(80,600);path.close();return path;}
- const pts=[];shapes.forEach(s=>{if(s.type==='path')s.points.forEach(p=>pts.push(p));else pts.push([s.x,s.y],[s.x+s.w,s.y+s.h]);});
- if(!pts.length)return path;
- const minX=Math.min(...pts.map(p=>p[0])),maxX=Math.max(...pts.map(p=>p[0])),minY=Math.min(...pts.map(p=>p[1])),maxY=Math.max(...pts.map(p=>p[1]));
- const bw=Math.max(1,maxX-minX),bh=Math.max(1,maxY-minY),scale=Math.min(440/bw,500/bh),ox=(600-bw*scale)/2-minX*scale,oy=(700-bh*scale)/2-minY*scale;
- const fit=p=>[p[0]*scale+ox,700-(p[1]*scale+oy)];
- function poly(points,size=8){if(points.length<2)return;for(let i=1;i<points.length;i++){let [x1,y1]=fit(points[i-1]),[x2,y2]=fit(points[i]),dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy)||1,r=Math.max(1,Math.min(7,size*scale/2)),px=-dy/len*r,py=dx/len*r;path.moveTo(x1+px,y1+py);path.lineTo(x2+px,y2+py);path.lineTo(x2-px,y2-py);path.lineTo(x1-px,y1-py);path.close();}}
- shapes.forEach(s=>{if(s.type==='path')poly(s.points,s.size);else if(s.type==='rect')poly([[s.x,s.y],[s.x+s.w,s.y],[s.x+s.w,s.y+s.h],[s.x,s.y+s.h],[s.x,s.y]],s.size);else if(s.type==='circle'){const a=[];for(let i=0;i<=48;i++){const t=i/48*Math.PI*2;a.push([s.x+s.w/2+Math.cos(t)*s.w/2,s.y+s.h/2+Math.sin(t)*s.h/2]);}poly(a,s.size);}});
- return path;
-}
-let strokeCache=null;
-function addLine(path,pts,map,r){
- const m=pts.map(map);
- const dot=(x,y)=>{for(let k=0;k<8;k++){const a=-k*Math.PI/4,px=x+r*Math.cos(a),py=y+r*Math.sin(a);if(k)path.lineTo(px,py);else path.moveTo(px,py)}path.close()};
- for(let i=0;i<m.length;i++){dot(m[i][0],m[i][1]);if(i){const [x1,y1]=m[i-1],[x2,y2]=m[i],dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);if(len<.01)continue;const px=-dy/len*r,py=dx/len*r;path.moveTo(x1+px,y1+py);path.lineTo(x2+px,y2+py);path.lineTo(x2-px,y2-py);path.lineTo(x1-px,y1-py);path.close()}}
-}
-function placeJamo(path,j,box,r){
- const c=strokeCache?strokeCache[j]:strokeData(j);if(!c)return;
- const [bx,by,bw,bh]=box,pad=r/7+1.5,w=Math.max(1,c.maxX-c.minX),h=Math.max(1,c.maxY-c.minY),sc=Math.min((bw-pad*2)/w,(bh-pad*2)/h),ox=bx+(bw-w*sc)/2-c.minX*sc,oy=by+(bh-h*sc)/2-c.minY*sc;
- const map=q=>[(q[0]*sc+ox)*7,770-(q[1]*sc+oy)*7];
- c.lines.forEach(l=>addLine(path,l,map,r));
-}
-// 기호는 가이드 위치/크기 그대로 반영 (점이 커지지 않게)
-function outlineForSymbol(ch){
- const path=new opentype.Path(),c=strokeData(ch);if(!c)return path;
- const r=syllableThickness([ch])*3.5,cx=(c.minX+c.maxX)/2,map=q=>[325+(q[0]-cx)*2.1,100+(415-q[1])*2.1];
- c.lines.forEach(l=>addLine(path,l,map,r));return path;
-}
-function downloadFont(){if(!window.opentype){alert('글꼴 생성 라이브러리를 불러오지 못했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.');return}
- try{
-  const glyphs=[];const notdef=new opentype.Glyph({name:'.notdef',unicode:0,advanceWidth:650,path:new opentype.Path()});glyphs.push(notdef);
-  // Store the 40 designed jamo as font characters. The glyph outlines are generated from the drawing strokes.
-  all.filter(ch=>Array.from(ch).length===1).forEach((ch,i)=>{const path=symbolSet.has(ch)?outlineForSymbol(ch):outlineForChar(ch,i);glyphs.push(new opentype.Glyph({name:'uni'+ch.charCodeAt(0).toString(16).toUpperCase(),unicode:ch.charCodeAt(0),advanceWidth:650,path}))});
-  // Include a useful Hangul syllable subset, composed from the drawn consonant/vowel outlines.
-  const L=consonants, V=vowels, T=['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
-  const jamoIndex=new Map(jamo.map((c,i)=>[c,i]));
-  const layoutMemo=new Map();strokeCache={};jamo.forEach(j=>{strokeCache[j]=strokeData(j)});
-  function addComposed(ch,li,vi,ti){const p=new opentype.Path(),ini=L[li],vow=V[vi],fin=ti?finalJamoParts(ti):[],thk=syllableThickness([ini,vow,...fin]),lay=syllableLayout(vow,ti,thk,layoutMemo),r=thk*3.5;
-   placeJamo(p,ini,lay.initial,r);placeJamo(p,vow,lay.vowel,r);fin.forEach((f,k)=>placeJamo(p,f,lay.finals[k],r));
-   glyphs.push(new opentype.Glyph({name:'uni'+ch.charCodeAt(0).toString(16).toUpperCase(),unicode:ch.charCodeAt(0),advanceWidth:700,path:p}))}
-  for(let li=0;li<19;li++)for(let vi=0;vi<21;vi++)for(let ti=0;ti<T.length;ti++){const code=0xAC00+(li*21+vi)*28+ti;addComposed(String.fromCharCode(code),li,vi,ti)}
-  strokeCache=null;
-  const familyName=(document.getElementById('fontName').value.trim()||'내 손글씨 폰트').replace(/[\\/:*?"<>|]/g,' ').slice(0,60);
-  const font=new opentype.Font({familyName,styleName:'Regular',unitsPerEm:1000,ascender:850,descender:-150,glyphs});
-  const blob=new Blob([font.toArrayBuffer()],{type:'font/otf'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=((familyName.replace(/\\s+/g,'-').replace(/[^\\w가-힣-]/g,'')||'my-font')+'.otf');a.click();URL.revokeObjectURL(url);
- }catch(e){console.error(e);alert('글꼴 파일을 만드는 중 문제가 생겼어요. 브라우저를 새로고침한 뒤 다시 시도해 주세요.')}}
-document.getElementById('downloadBtn').onclick=downloadFont;document.getElementById('downloadTop').onclick=downloadFont;
-
-const customKey='my-handfont-custom-v2',posterKey='my-handfont-poster-v2';
-let customNames=[];try{customNames=JSON.parse(localStorage.getItem(customKey)||'[]')}catch(e){}
-customNames=customNames.filter(x=>typeof x==='string'&&x.length&& !all.includes(x));
-categories.custom.push(...customNames);all.push(...customNames);
-function saveCustom(){try{localStorage.setItem(customKey,JSON.stringify(customNames))}catch(e){alert('저장 공간이 부족합니다.')}}
-function renderCustom(){document.getElementById('customList').innerHTML='';customNames.forEach(name=>{const row=document.createElement('div');row.className='customitem';const b=document.createElement('button');b.textContent=name;b.onclick=()=>{state.tab='custom';state.index=all.indexOf(name);update()};const edit=document.createElement('button');edit.textContent='수정';edit.onclick=()=>{const next=prompt('새 이름을 입력하세요',name)?.trim();if(!next||next===name)return;if(all.includes(next)){alert('이미 등록된 글자입니다.');return}const i=customNames.indexOf(name);customNames[i]=next;categories.custom[i]=next;all[all.indexOf(name)]=next;state.drawings[next]=state.drawings[name]||[];delete state.drawings[name];saveCustom();persist();renderCustom();update()};const del=document.createElement('button');del.textContent='삭제';del.onclick=()=>{if(!confirm(name+' 항목과 그림을 삭제할까요?'))return;customNames=customNames.filter(x=>x!==name);categories.custom.splice(categories.custom.indexOf(name),1);all.splice(all.indexOf(name),1);delete state.drawings[name];state.index=0;saveCustom();persist();renderCustom();update()};row.append(b,edit,del);document.getElementById('customList').append(row)})}
-document.getElementById('customAdd').onclick=()=>{const input=document.getElementById('customName'),name=input.value.trim();if(!name)return;if(all.includes(name)){alert('이미 등록된 글자입니다.');return}customNames.push(name);categories.custom.push(name);all.push(name);input.value='';state.tab='custom';state.index=all.indexOf(name);saveCustom();renderCustom();update()};
-renderCustom();
-document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{const mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));document.getElementById('fontWorkspace').classList.toggle('hiddenmode',mode==='poster');document.getElementById('posterWorkspace').classList.toggle('hiddenmode',mode!=='poster');if(mode==='egg'){document.querySelector('[data-tab="custom"]').click()}if(mode==='poster'){refreshEggs();renderPoster()}});
-const pc=document.getElementById('posterCanvas'),pctx=pc.getContext('2d');
-let poster={bg:'#ffffff',pattern:'none',items:[]},selected=-1,history=[],future=[],drag=null,customFont=null;
-try{const old=JSON.parse(localStorage.getItem(posterKey)||'null');if(old&&Array.isArray(old.items))poster=old}catch(e){}
-function posterPersist(){try{localStorage.setItem(posterKey,JSON.stringify(poster))}catch(e){document.getElementById('saveStatus').textContent='포스터 저장 공간 부족'}}
-function checkpoint(){history.push(JSON.stringify(poster));if(history.length>50)history.shift();future=[]}
-function refreshEggs(){const sel=document.getElementById('posterEgg');sel.innerHTML='';customNames.forEach(name=>{const opt=document.createElement('option');opt.value=name;opt.textContent=name;sel.append(opt)})}
-function drawEgg(c,name,w,h){const a=state.drawings[name]||[];c.save();c.scale(w/900,h/600);a.forEach(s=>drawToContext(c,s));c.restore()}
-function posterItem(c,item,outline=false){c.save();c.translate(item.x,item.y);c.rotate((item.rot||0)*Math.PI/180);const z=item.scale||1;c.scale(z,z);c.fillStyle=item.color||'#6757d9';if(item.kind==='text'){c.textAlign=item.align||'center';c.textBaseline='middle';const lines=(item.text||'').split('\\n');c.font=(item.size||65)+'px '+(item.own&&customFont?'"PosterHandFont",':'')+'sans-serif';lines.forEach((line,j)=>{const spacing=item.spacing||0;let widths=Array.from(line).map(ch=>c.measureText(ch).width),total=widths.reduce((a,b)=>a+b,0)+Math.max(0,widths.length-1)*spacing;let x=item.align==='left'?0:item.align==='right'?-total:-total/2;for(let k=0;k<widths.length;k++){c.fillText(Array.from(line)[k],x,j*(item.size||65)*1.35);x+=widths[k]+spacing}})}else if(item.kind==='egg'){drawEgg(c,item.name,180,120)}else{c.font='110px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(({star:'★',heart:'♥',circle:'●',square:'■'})[item.kind]||'★',0,0)}if(outline){c.strokeStyle='#6757d9';c.lineWidth=2/z;c.setLineDash([7,5]);c.strokeRect(-110,-75,220,150)}c.restore()}
-function renderPoster(){const c=pctx;c.clearRect(0,0,900,1200);c.fillStyle=poster.bg||'#fff';c.fillRect(0,0,900,1200);c.strokeStyle='#ddd7f1';c.fillStyle='#ddd7f1';if(poster.pattern==='dots')for(let x=25;x<900;x+=45)for(let y=25;y<1200;y+=45){c.beginPath();c.arc(x,y,2,0,Math.PI*2);c.fill()}if(poster.pattern==='grid')for(let x=0;x<=900;x+=60){c.beginPath();c.moveTo(x,0);c.lineTo(x,1200);c.stroke()}if(poster.pattern==='grid')for(let y=0;y<=1200;y+=60){c.beginPath();c.moveTo(0,y);c.lineTo(900,y);c.stroke()}poster.items.forEach((item,i)=>posterItem(c,item,i===selected))}
-function addItem(item){checkpoint();poster.items.push({x:450,y:500,scale:1,rot:0,...item});selected=poster.items.length-1;posterPersist();renderPoster()}
-document.getElementById('posterTextAdd').onclick=()=>addItem({kind:'text',text:document.getElementById('posterText').value,size:+document.getElementById('posterSize').value,spacing:+document.getElementById('posterSpacing').value,color:document.getElementById('posterColor').value,align:document.getElementById('posterAlign').value,own:!!customFont});
-document.querySelectorAll('[data-shape]').forEach(b=>b.onclick=()=>addItem({kind:b.dataset.shape,color:document.getElementById('posterColor').value}));
-document.getElementById('posterEggAdd').onclick=()=>{const name=document.getElementById('posterEgg').value;if(!name)return alert('먼저 나만의 글자를 추가해 주세요.');addItem({kind:'egg',name})};
-['posterBg','posterPattern'].forEach(id=>document.getElementById(id).onchange=()=>{checkpoint();poster.bg=document.getElementById('posterBg').value;poster.pattern=document.getElementById('posterPattern').value;posterPersist();renderPoster()});
-['elementScale','elementRotation'].forEach(id=>document.getElementById(id).oninput=()=>{if(selected<0)return;const item=poster.items[selected];item[id==='elementScale'?'scale':'rot']=id==='elementScale'?+document.getElementById(id).value/100:+document.getElementById(id).value;posterPersist();renderPoster()});
-document.getElementById('posterDelete').onclick=()=>{if(selected<0)return;checkpoint();poster.items.splice(selected,1);selected=-1;posterPersist();renderPoster()};
-document.getElementById('posterUndo').onclick=()=>{if(!history.length)return;future.push(JSON.stringify(poster));poster=JSON.parse(history.pop());selected=-1;posterPersist();renderPoster()};
-document.getElementById('posterRedo').onclick=()=>{if(!future.length)return;history.push(JSON.stringify(poster));poster=JSON.parse(future.pop());selected=-1;posterPersist();renderPoster()};
-function ppos(e){const r=pc.getBoundingClientRect();return {x:(e.clientX-r.left)*900/r.width,y:(e.clientY-r.top)*1200/r.height}}
-pc.onpointerdown=e=>{const p=ppos(e);selected=-1;for(let i=poster.items.length-1;i>=0;i--){const it=poster.items[i],dx=p.x-it.x,dy=p.y-it.y;if(Math.abs(dx)<Math.max(120,(it.size||110)*2)*(it.scale||1)&&Math.abs(dy)<120*(it.scale||1)){selected=i;break}}if(selected>=0){checkpoint();drag={x:p.x,y:p.y,ox:poster.items[selected].x,oy:poster.items[selected].y};pc.setPointerCapture(e.pointerId);document.getElementById('elementScale').value=(poster.items[selected].scale||1)*100;document.getElementById('elementRotation').value=poster.items[selected].rot||0}renderPoster()};
-pc.onpointermove=e=>{if(!drag||selected<0)return;const p=ppos(e);poster.items[selected].x=drag.ox+p.x-drag.x;poster.items[selected].y=drag.oy+p.y-drag.y;renderPoster()};
-pc.onpointerup=pc.onpointercancel=()=>{if(drag){drag=null;posterPersist()}};
-function saveBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1500)}
-document.getElementById('posterPng').onclick=()=>{const prev=selected;selected=-1;const exportCanvas=document.createElement('canvas');exportCanvas.width=1800;exportCanvas.height=2400;const c=exportCanvas.getContext('2d');renderPoster();c.scale(2,2);c.drawImage(pc,0,0);selected=prev;renderPoster();exportCanvas.toBlob(b=>b&&saveBlob(b,'my-typography-poster.png'),'image/png')};
-document.getElementById('posterSave').onclick=()=>saveBlob(new Blob([JSON.stringify(poster,null,2)],{type:'application/json'}),'my-poster-project.json');
-document.getElementById('posterLoad').onclick=()=>document.getElementById('posterFile').click();
-document.getElementById('posterFile').onchange=async e=>{try{const obj=JSON.parse(await e.target.files[0].text());if(!Array.isArray(obj.items))throw Error();checkpoint();poster=obj;selected=-1;posterPersist();renderPoster()}catch(err){alert('올바른 포스터 작업 파일이 아닙니다.')}e.target.value=''};
-document.getElementById('posterFont').onclick=async()=>{if(!window.opentype)return alert('OTF 라이브러리가 필요합니다.');alert('직접 만든 글꼴은 OTF 다운로드 후 설치하거나, 포스터 문구에 사용할 수 있습니다. 현재 포스터에서는 브라우저 기본 글꼴로 문구가 표시됩니다.');};
-refreshEggs();renderPoster();
-
-load();try{document.getElementById('fontName').value=localStorage.getItem('my-handfont-name-v1')||'내 손글씨 폰트'}catch(e){}document.getElementById('fontName').addEventListener('input',()=>{try{localStorage.setItem('my-handfont-name-v1',document.getElementById('fontName').value);document.getElementById('saveStatus').textContent='✓ 자동 저장됨'}catch(e){}});update();
-})();
-</script>
-</body></html>
+</main>
+<section class="poster" id="posterWorkspace" hidden>
+ <div class="posterbar"><div class="history"><button id="posterUndo" class="iconbutton" title="실행 취소 (Ctrl/Cmd+Z)" aria-label="포스터 실행 취소">↶</button><button id="posterRedo" class="iconbutton" title="다시 실행 (Ctrl/Cmd+Shift+Z)" aria-label="포스터 다시 실행">↷</button></div><span class="hint">두 손가락 톡: 취소 · 세 손가락 톡: 다시 실행</span><span class="spacer"></span><span class="save" id="posterSaveStatus">자동 저장</span><select id="exportSize" aria-label="PNG 이미지 크기"><option value="2">1800 × 2400</option><option value="3">2700 × 3600</option></select><button id="posterPng" class="primary">PNG 이미지 저장 ↗</button></div>
+ <div class="postergrid">
+  <div class="toolrail" aria-label="포스터 도구">
+   <button id="selectTool" class="active" title="선택하고 이동"><b>↖</b>선택</button>
+   <button id="addText" title="글자 추가 후 바로 입력"><b>T</b>글자</button>
+   <div class="railsep"></div>
+   <button data-addshape="circle" title="동그라미 추가"><b>○</b>원</button>
+   <button data-addshape="square" title="네모 추가"><b>□</b>네모</button>
+   <button data-addshape="triangle" title="세모 추가"><b>△</b>세모</button>
+   <button data-addshape="star" title="별 추가"><b>☆</b>별</button>
+   <button data-addshape="heart" title="하트 추가"><b>♡</b>하트</button>
+   <div class="railsep"></div>
+   <button id="posterPen" title="포스터에 직접 그리기"><b>✎</b>펜</button>
+  </div>
+  <div><div class="boardarea" id="boardArea"><svg id="posterScene" xmlns="http://www.w3.org/2000/svg" viewBox="-60 -60 1020 1320" role="img" aria-label="포스터 편집 공간" tabindex="0"></svg>
+   <div class="floatingedit" id="textEditor" hidden><label for="inlineText">문구를 입력하세요. 포스터에 바로 반영됩니다.</label><textarea id="inlineText" spellcheck="false"></textarea><div><span class="hint">줄바꿈: Enter · 완료: Ctrl/Cmd+Enter</span><button id="finishText" class="primary">완료</button></div></div>
+  </div><div class="boardhint" id="boardHint">요소를 끌어 이동 · 모서리를 끌어 크기 변경 · 위쪽 원을 끌어 회전 · 글자 두 번 누르기: 내용 수정</div></div>
+  <aside class="inspector">
+   <section>
+    <h3 id="selectionTitle">종이 설정</h3>
+    <div id="selectionControls" hidden>
+     <div class="propertyrow"><label class="colorlabel"><input type="color" id="elementColor" value="#6757d9">선택 요소 색</label></div>
+     <div class="palette" id="elementPalette"></div>
+     <div id="textProperties" hidden>
+      <label>문구<textarea id="posterText" rows="2" spellcheck="false"></textarea></label>
+      <div class="propertyrow"><label>글꼴<select id="textFont"><option value="own">내가 만든 폰트</option><option value="system">기본 글꼴</option></select></label></div>
+      <div class="propertyrow"><label>글자 크기<input type="number" id="posterSize" min="12" max="400" step="2"></label><label>글자 간격<input type="number" id="posterSpacing" min="-5" max="60" step="1"></label></div>
+      <label>정렬<select id="posterAlign"><option value="left">왼쪽</option><option value="center">가운데</option><option value="right">오른쪽</option></select></label><div class="miniinfo" id="fontUseNote"></div>
+     </div>
+     <div class="minibuttons" style="margin-top:10px"><button id="duplicateElement">복제</button><button id="deleteElement">삭제</button><button id="centerElement">가운데</button></div>
+     <div class="minibuttons" style="margin-top:6px"><button id="bringForward">앞으로</button><button id="sendBackward">뒤로</button></div>
+     <details style="margin-top:10px"><summary>정확한 크기와 회전</summary><div class="propertyrow"><label>너비<input type="number" id="exactWidth" min="10" max="3000"></label><label>높이<input type="number" id="exactHeight" min="10" max="4000"></label></div><label>회전 각도<input type="number" id="exactRotation" min="-360" max="360" step="1"></label></details>
+    </div>
+    <div id="nothingSelected" class="emptyhint">글자나 도형을 누르면 선택됩니다.<br>선택한 요소의 색을 여기서 바꿀 수 있어요.</div>
+   </section>
+   <hr class="divider">
+   <section><h3>배경</h3><div class="propertyrow"><label class="colorlabel"><input id="posterBg" type="color" value="#ffffff">종이 색</label><select id="posterPattern" aria-label="배경 패턴"><option value="none">패턴 없음</option><option value="dots">도트</option><option value="grid">격자</option></select></div><div class="palette" id="backgroundPalette"></div></section>
+   <hr class="divider">
+   <section><h3>내 이스터에그</h3><div id="eggTray" class="eggtray"></div><div id="eggEmpty" class="emptyhint">폰트 만들기에서 ‘나만의 글자’를 그리면 여기에 나타납니다.</div><div class="miniinfo">그림을 누르면 포스터에 추가됩니다.</div></section>
+   <hr class="divider">
+   <section><details><summary>쉽게 시작하기</summary><div class="templategrid"><button id="templateTitle">제목 포스터</button><button id="templateCat">고양이 포스터</button></div><button id="addCat" style="width:100%;font-size:12px">원과 세모로 만든 고양이 추가</button><button id="blankPoster" style="width:100%;margin-top:6px;font-size:12px">빈 종이로 시작</button><div class="miniinfo">고양이의 귀, 눈, 얼굴을 각각 선택해 색과 모양을 바꿔 보세요.</div></details></section>
+   <hr class="divider">
+   <section class="fullwidth"><details open><summary>요소 목록</summary><div id="layerList" class="layers"></div></details></section>
+  </aside>
+ </div>
+</section>
+<div class="foot">내 글꼴 공방 · 이 브라우저에 자동 저장됩니다. 브라우저 데이터 삭제·시크릿 모드 종료 시 작업이 사라질 수 있습니다. 다른 기기로 자동 동기화되지는 않습니다.</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script src="font-engine.js?v=3.0"></script>
+<script src="studio.js?v=3.0"></script>
+</body>
+</html>
