@@ -149,6 +149,27 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
  .inspector,.posterWorkspaceDraw .inspector{max-height:none!important}
 }
 
+
+/* Poster UI 3.4 — simpler iPad controls */
+.posterbar .danger{color:#d24b4b!important;border-color:#f0caca!important;background:#fff!important}
+.posterbar .danger:disabled{opacity:.35}
+.toolrail .clear-drawing{color:#d24b4b!important}
+.simple-inspector-title{font-size:13px;font-weight:800;margin:0 0 10px}
+.simple-color-note{font-size:10px;color:var(--muted);line-height:1.5;margin-top:7px}
+.template-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.template-cards button{padding:10px 6px;font-size:11px;line-height:1.35}
+.template-cards button:last-child{grid-column:1/-1}
+#selectionControls .simple-actions{display:none!important}
+@media(max-width:850px){
+ .posterbar{position:sticky;top:0;z-index:20}
+ .posterbar .posterModeBadge{display:none!important}
+ .quickstyle label{font-size:10px}
+ .quickstyle input[type=color]{width:32px;height:32px}
+ .posterbar #deleteSelectedTop,.posterbar #posterPng{min-height:38px}
+ .toolrail button{min-height:53px}
+ .inspector{padding:13px!important}
+}
+
 </style>
 </head>
 <body>
@@ -174,7 +195,7 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
 </section>
 </main>
 <section class="poster" id="posterWorkspace" hidden>
- <div class="posterbar"><div class="history"><button id="posterUndo" class="iconbutton" title="실행 취소" aria-label="포스터 실행 취소">↶</button><button id="posterRedo" class="iconbutton" title="다시 실행" aria-label="포스터 다시 실행">↷</button></div><span class="posterModeBadge" id="posterModeBadge">선택 모드</span><div class="quickstyle"><label>색상 <input type="color" id="quickColor" value="#6757d9"></label><div class="brushwrap"><label>펜 크기 <input class="brushsize" type="range" id="quickBrushSize" min="2" max="60" value="8"></label></div></div><span class="hint">두 손가락 톡: 취소 · 세 손가락 톡: 다시 실행</span><span class="spacer"></span><button id="inspectorToggle" class="inspectorToggle">편집</button><span class="save" id="posterSaveStatus">자동 저장</span><select id="exportSize" aria-label="PNG 이미지 크기"><option value="2">1800 × 1800</option><option value="3">2700 × 2700</option></select><button id="posterPng" class="primary">PNG 저장 ↗</button></div>
+ <div class="posterbar"><div class="history"><button id="posterUndo" class="iconbutton" title="실행 취소" aria-label="포스터 실행 취소">↶</button><button id="posterRedo" class="iconbutton" title="다시 실행" aria-label="포스터 다시 실행">↷</button></div><span class="posterModeBadge" id="posterModeBadge">선택 모드</span><div class="quickstyle"><label>색상 <input type="color" id="quickColor" value="#6757d9"></label><div class="brushwrap"><label>펜 크기 <input class="brushsize" type="range" id="quickBrushSize" min="2" max="60" value="8"></label></div></div><span class="spacer"></span><button id="deleteSelectedTop" class="danger" disabled>🗑 삭제</button><span class="save" id="posterSaveStatus">자동 저장</span><select id="exportSize" aria-label="PNG 이미지 크기"><option value="2">1800 × 1800</option><option value="3">2700 × 2700</option></select><button id="posterPng" class="primary">PNG 저장 ↗</button></div>
  <div class="postergrid">
   <div class="toolrail" aria-label="포스터 도구">
    <button id="selectTool" class="active" title="선택하고 이동"><b>↖</b>선택</button>
@@ -186,16 +207,21 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
    <button data-addshape="star" title="별 추가"><b>☆</b>별</button>
    <button data-addshape="heart" title="하트 추가"><b>♡</b>하트</button>
    <div class="railsep"></div>
-   <button id="posterPen" title="계속 이어서 그리기"><b>✎</b>그리기</button>
+   <button id="posterPen" title="계속 이어서 그리기"><b>✎</b>그리기</button><button id="clearDrawing" class="clear-drawing" title="펜으로 그린 선만 모두 지우기"><b>⌫</b>그림<br>초기화</button>
   </div>
   <div class="posterCanvasWrap"><div class="posterDrawControls" id="posterDrawControls"><label>크기<input type="range" id="posterBrushSize" min="2" max="60" value="8"><span class="value" id="posterBrushSizeValue">8</span></label><button id="posterQuickUndo" title="실행 취소">↶</button><button id="posterQuickRedo" title="다시 실행">↷</button></div><div class="boardarea" id="boardArea"><svg id="posterScene" xmlns="http://www.w3.org/2000/svg" viewBox="-60 -60 1020 1020" role="img" aria-label="포스터 편집 공간" tabindex="0"></svg>
    <div class="floatingedit" id="textEditor" hidden><label for="inlineText">문구를 입력하세요. 포스터에 바로 반영됩니다.</label><textarea id="inlineText" spellcheck="false"></textarea><div><span class="hint">줄바꿈: Enter · 완료: Ctrl/Cmd+Enter</span><button id="finishText" class="primary">완료</button></div></div>
   </div><div class="boardhint" id="boardHint">요소를 끌어 이동 · 모서리를 끌어 크기 변경 · 위쪽 원을 끌어 회전 · 글자 두 번 누르기: 내용 수정</div></div>
   <aside class="inspector">
    <section>
-    <h3 id="selectionTitle">선택한 것 꾸미기</h3>
+    <div class="simple-inspector-title" id="selectionTitle">색상</div>
     <div id="selectionControls" hidden>
-     <div class="kid-colors" id="kidElementColors">
+      <div id="textProperties" hidden>
+       <label>글자 바꾸기<textarea id="posterText" rows="2" spellcheck="false"></textarea></label>
+       <label style="margin-top:8px">글자 크기 <input type="range" id="posterSize" min="20" max="250" step="2"></label>
+      </div>
+    </div>
+    <div class="kid-colors" id="kidElementColors">
       <button data-kidcolor="#25272c" style="background:#25272c" aria-label="검정"></button>
       <button data-kidcolor="#ffffff" style="background:#ffffff" aria-label="흰색"></button>
       <button data-kidcolor="#ff5f6d" style="background:#ff5f6d" aria-label="빨강"></button>
@@ -208,18 +234,12 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
       <button data-kidcolor="#59c3c3" style="background:#59c3c3" aria-label="민트"></button>
       <button data-kidcolor="#a66b4f" style="background:#a66b4f" aria-label="갈색"></button>
       <button data-kidcolor="#b8bcc7" style="background:#b8bcc7" aria-label="회색"></button>
-     </div>
-     <label class="color-any">내가 원하는 색 <input type="color" id="elementColor" value="#6757d9"></label>
-     <div id="textProperties" hidden>
-      <label>글자 바꾸기<textarea id="posterText" rows="2" spellcheck="false"></textarea></label>
-      <label style="margin-top:8px">글자 크기 <input type="range" id="posterSize" min="20" max="250" step="2"></label>
-     </div>
-     <div class="simple-actions"><button id="duplicateElement">하나 더</button><button id="deleteElement">지우기</button></div>
     </div>
-    <div id="nothingSelected" class="emptyhint">바꾸고 싶은 글자나 도형을 눌러 주세요.</div>
+    <label class="color-any">원하는 색 직접 고르기 <input type="color" id="elementColor" value="#6757d9"></label>
+    <div id="nothingSelected" class="simple-color-note">도형이나 글자를 선택하면 그 색이 바뀌고, 그리기 중에는 펜 색이 바뀝니다.</div>
    </section>
    <section>
-    <h3>배경색</h3>
+    <div class="simple-inspector-title">배경색</div>
     <div class="kid-colors" id="kidBgColors">
       <button data-bgcolor="#ffffff" style="background:#ffffff"></button><button data-bgcolor="#fff4dc" style="background:#fff4dc"></button>
       <button data-bgcolor="#ffe6ee" style="background:#ffe6ee"></button><button data-bgcolor="#eee9ff" style="background:#eee9ff"></button>
@@ -228,17 +248,20 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
       <button data-bgcolor="#25272c" style="background:#25272c"></button><button data-bgcolor="#6757d9" style="background:#6757d9"></button>
       <button data-bgcolor="#ff82b2" style="background:#ff82b2"></button><button data-bgcolor="#6bcb77" style="background:#6bcb77"></button>
     </div>
-    <label class="color-any">내가 원하는 배경색 <input id="posterBg" type="color" value="#ffffff"></label>
+    <label class="color-any">원하는 배경색 직접 고르기 <input id="posterBg" type="color" value="#ffffff"></label>
    </section>
-   <section><h3>내가 그린 그림</h3><div id="eggTray" class="eggtray"></div><div id="eggEmpty" class="emptyhint">‘나만의 글자’를 그리면 여기에 나타나요.</div></section>
+   <section>
+    <div class="simple-inspector-title">기본 템플릿</div>
+    <div class="template-cards"><button id="templateTitle">제목 포스터</button><button id="templateCat">고양이 포스터</button><button id="blankPoster">빈 종이로 시작</button></div>
+   </section>
+   <section><div class="simple-inspector-title">내가 그린 그림</div><div id="eggTray" class="eggtray"></div><div id="eggEmpty" class="emptyhint">‘나만의 글자’를 그리면 여기에 나타나요.</div></section>
    <div class="compat-hidden" aria-hidden="true">
     <div id="elementPalette"></div><div id="backgroundPalette"></div><div id="layerList"></div><div id="fontUseNote"></div>
     <select id="textFont"><option value="own">내가 만든 폰트</option><option value="system">기본 글꼴</option></select>
     <input id="posterSpacing" type="number" value="0"><select id="posterAlign"><option value="center">가운데</option></select>
     <input id="exactWidth" type="number"><input id="exactHeight" type="number"><input id="exactRotation" type="number">
-    <button id="centerElement"></button><button id="bringForward"></button><button id="sendBackward"></button>
-    <select id="posterPattern"><option value="none">패턴 없음</option></select>
-    <button id="templateTitle"></button><button id="templateCat"></button><button id="addCat"></button><button id="blankPoster"></button>
+    <button id="duplicateElement"></button><button id="deleteElement"></button><button id="centerElement"></button><button id="bringForward"></button><button id="sendBackward"></button>
+    <select id="posterPattern"><option value="none">패턴 없음</option></select><button id="addCat"></button>
    </div>
   </aside>
  </div>
@@ -246,6 +269,6 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
 <div class="foot">내 글꼴 공방 · 이 브라우저에 자동 저장됩니다. 브라우저 데이터 삭제·시크릿 모드 종료 시 작업이 사라질 수 있습니다. 다른 기기로 자동 동기화되지는 않습니다.</div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <script src="font-engine.js?v=3.0"></script>
-<script src="studio.js?v=3.3"></script>
+<script src="studio.js?v=3.4"></script>
 </body>
 </html>
