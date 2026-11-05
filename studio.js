@@ -234,12 +234,12 @@ function uiScale(){const m=scene.getScreenCTM();return m?1/Math.max(.1,m.a):1.8;
 function selectionSVG(){
  const it=selectedItem();if(!it||editing===it.id)return'';
  const g=geometry(it),w=g.w*(it.sx||1),h=g.h*(it.sy||1),u=uiScale(),r=6*u,rotY=-h/2-30*u;
- const handles=[[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0]];
- let s=`<g transform="translate(${it.x} ${it.y}) rotate(${it.rot||0})"><rect x="${-w/2}" y="${-h/2}" width="${w}" height="${h}" fill="none" stroke="#6757d9" stroke-width="${1.5*u}" pointer-events="none"/><path d="M0 ${-h/2}V${rotY}" fill="none" stroke="#6757d9" stroke-width="${1.3*u}" pointer-events="none"/>`;
+ const handles=[[-1,-1],[1,-1],[1,1],[-1,1]];
+ let s=`<g transform="translate(${it.x} ${it.y}) rotate(${it.rot||0})"><rect x="${-w/2}" y="${-h/2}" width="${w}" height="${h}" fill="none" stroke="#6757d9" stroke-width="${1.5*u}" pointer-events="none"/>`; 
  for(const [x,y]of handles){
   s+=`<g data-handle="${x},${y}" style="cursor:${x&&y?(x===y?'nwse-resize':'nesw-resize'):x?'ew-resize':'ns-resize'}"><rect x="${x*w/2-r*2}" y="${y*h/2-r*2}" width="${r*4}" height="${r*4}" fill="transparent"/><rect x="${x*w/2-r}" y="${y*h/2-r}" width="${r*2}" height="${r*2}" rx="${u*2}" fill="white" stroke="#6757d9" stroke-width="${1.3*u}"/></g>`;
  }
- s+=`<g data-handle="rotate" style="cursor:grab"><circle cy="${rotY}" r="${r*2.5}" fill="transparent"/><circle cy="${rotY}" r="${r*1.15}" fill="#6757d9" stroke="white" stroke-width="${u*2}"/></g></g>`;return s;
+ s+=`</g>`;return s;
 }
 function renderPoster(){
  let overlays=snapLines.map(axis=>axis==='x'?'<path d="M450 0V900"/>':'<path d="M0 450H900"/>').join('');
