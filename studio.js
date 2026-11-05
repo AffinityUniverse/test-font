@@ -355,7 +355,9 @@ function pointerEnd(e,cancelled=false){
    if(penPoints.length===1)penPoints.push({x:penPoints[0].x+.1,y:penPoints[0].y+.1});
    const b=C.bounds([penPoints.map(p=>[p.x,p.y])]),pad=5;
    const it=baseItem('stroke',{x:(b.x0+b.x1)/2,y:(b.y0+b.y1)/2,w:b.w+pad*2,h:b.h+pad*2,lineWidth:8,points:penPoints.map(p=>[p.x-b.x0+pad,p.y-b.y0+pad])});
-   poster.items.push(it);selected=it.id;
+   // Keep pen mode continuous: a finished stroke is saved without being auto-selected.
+   // This prevents transform handles from covering the canvas between Apple Pencil strokes.
+   poster.items.push(it);selected=null;
   }
   drag=null;penPoints=null;snapLines=[];if(!cancelled)commit();syncPoster();
  }
