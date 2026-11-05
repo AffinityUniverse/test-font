@@ -251,7 +251,7 @@ function val(id,v){const el=$(id);if(el!==document.activeElement)el.value=v;}
 function syncInspector(full=true){
  const it=selectedItem();$('selectionControls').hidden=!it;$('nothingSelected').hidden=!!it;$('selectionTitle').textContent=it?itemLabel(it):'종이 설정';$('textProperties').hidden=it?.kind!=='text';
  val('posterBg',safeColor(poster.bg,'#ffffff'));val('posterPattern',poster.pattern);
- if(it){val('elementColor',safeColor(it.color));if(full)currentColor=safeColor(it.color);
+ if(it){val('elementColor',safeColor(it.color));if(full)currentColor=safeColor(it.color);if($('quickColor'))$('quickColor').value=safeColor(it.color);
   const g=geometry(it);val('exactWidth',Math.round(g.w*(it.sx||1)));val('exactHeight',Math.round(g.h*(it.sy||1)));val('exactRotation',Math.round(it.rot||0));
   if(it.kind==='text'){
    val('posterText',it.text);val('textFont',it.own===false?'system':'own');val('posterSize',it.size);val('posterSpacing',it.spacing||0);val('posterAlign',it.align||'center');
@@ -277,6 +277,18 @@ function bindProperty(id,field,convert=v=>v){
  $(id).addEventListener('change',()=>commit());$(id).addEventListener('blur',()=>commit());
 }
 bindProperty('posterText','text');bindProperty('elementColor','color',v=>(currentColor=safeColor(v)));
+$('quickColor')&&($('quickColor').oninput=e=>{
+ currentColor=safeColor(e.target.value);
+ const it=selectedItem();
+ if(it){change(()=>it.color=currentColor,true);}
+ else{renderPoster();}
+});
+$('quickColor')&&($('quickColor').onchange=()=>commit());
+$('quickBrushSize')&&($('quickBrushSize').oninput=e=>{
+ posterBrushSize=+e.target.value;
+ if($('posterBrushSize'))$('posterBrushSize').value=posterBrushSize;
+ if($('posterBrushSizeValue'))$('posterBrushSizeValue').textContent=posterBrushSize;
+});
 bindProperty('posterSize','size',v=>num(v,80,12,400));bindProperty('posterSpacing','spacing',v=>num(v,0,-5,60));bindProperty('posterAlign','align');bindProperty('textFont','own',v=>v==='own');
 $('exactWidth').onchange=e=>{const it=selectedItem();if(it)change(()=>it.sx=num(e.target.value,100,10,3000)/geometry(it).w);};
 $('exactHeight').onchange=e=>{const it=selectedItem();if(it)change(()=>it.sy=num(e.target.value,100,10,4000)/geometry(it).h);};
