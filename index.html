@@ -128,6 +128,27 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
  .posterbar .hint,.posterbar .save,#exportSize{display:none!important}
 }
 
+
+/* Poster UI 3.3 — elementary-school simple */
+.postergrid,.posterWorkspaceDraw .postergrid{grid-template-columns:64px minmax(360px,1fr) 240px!important}
+.boardarea,.posterWorkspaceDraw .boardarea{height:auto!important;min-height:0!important;aspect-ratio:1/1!important;max-height:calc(100vh - 220px)!important}
+.inspector,.posterWorkspaceDraw .inspector{max-height:calc(100vh - 220px)!important}
+.kid-colors{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:8px 0 4px}
+.kid-colors button{aspect-ratio:1;border-radius:50%;padding:0;border:2px solid #fff;box-shadow:0 0 0 1px #dfe1e7}
+.kid-colors button:active{transform:scale(.9)}
+.color-any{display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 10px;background:#f7f7fa;border-radius:10px;font-size:11px;color:var(--muted)}
+.color-any input[type=color]{width:42px;height:34px;border:0;padding:0;background:transparent}
+.inspector section{padding-bottom:12px!important;margin-bottom:12px!important}
+.simple-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.simple-actions button{padding:8px 5px;font-size:11px}
+#layerList,.poster-help,.poster-start,#backgroundPalette,#elementPalette{display:none!important}
+.compat-hidden{display:none!important}
+@media(max-width:850px){
+ .postergrid,.posterWorkspaceDraw .postergrid{grid-template-columns:54px minmax(0,1fr)!important}
+ .boardarea,.posterWorkspaceDraw .boardarea{height:auto!important;min-height:0!important;aspect-ratio:1/1!important;max-height:none!important}
+ .inspector,.posterWorkspaceDraw .inspector{max-height:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -153,7 +174,7 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
 </section>
 </main>
 <section class="poster" id="posterWorkspace" hidden>
- <div class="posterbar"><div class="history"><button id="posterUndo" class="iconbutton" title="실행 취소" aria-label="포스터 실행 취소">↶</button><button id="posterRedo" class="iconbutton" title="다시 실행" aria-label="포스터 다시 실행">↷</button></div><span class="posterModeBadge" id="posterModeBadge">선택 모드</span><div class="quickstyle"><label>색상 <input type="color" id="quickColor" value="#6757d9"></label><div class="brushwrap"><label>펜 크기 <input class="brushsize" type="range" id="quickBrushSize" min="2" max="60" value="8"></label></div></div><span class="hint">두 손가락 톡: 취소 · 세 손가락 톡: 다시 실행</span><span class="spacer"></span><button id="inspectorToggle" class="inspectorToggle">편집</button><span class="save" id="posterSaveStatus">자동 저장</span><select id="exportSize" aria-label="PNG 이미지 크기"><option value="2">1800 × 2400</option><option value="3">2700 × 3600</option></select><button id="posterPng" class="primary">PNG 저장 ↗</button></div>
+ <div class="posterbar"><div class="history"><button id="posterUndo" class="iconbutton" title="실행 취소" aria-label="포스터 실행 취소">↶</button><button id="posterRedo" class="iconbutton" title="다시 실행" aria-label="포스터 다시 실행">↷</button></div><span class="posterModeBadge" id="posterModeBadge">선택 모드</span><div class="quickstyle"><label>색상 <input type="color" id="quickColor" value="#6757d9"></label><div class="brushwrap"><label>펜 크기 <input class="brushsize" type="range" id="quickBrushSize" min="2" max="60" value="8"></label></div></div><span class="hint">두 손가락 톡: 취소 · 세 손가락 톡: 다시 실행</span><span class="spacer"></span><button id="inspectorToggle" class="inspectorToggle">편집</button><span class="save" id="posterSaveStatus">자동 저장</span><select id="exportSize" aria-label="PNG 이미지 크기"><option value="2">1800 × 1800</option><option value="3">2700 × 2700</option></select><button id="posterPng" class="primary">PNG 저장 ↗</button></div>
  <div class="postergrid">
   <div class="toolrail" aria-label="포스터 도구">
    <button id="selectTool" class="active" title="선택하고 이동"><b>↖</b>선택</button>
@@ -167,28 +188,58 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
    <div class="railsep"></div>
    <button id="posterPen" title="계속 이어서 그리기"><b>✎</b>그리기</button>
   </div>
-  <div class="posterCanvasWrap"><div class="posterDrawControls" id="posterDrawControls"><label>크기<input type="range" id="posterBrushSize" min="2" max="60" value="8"><span class="value" id="posterBrushSizeValue">8</span></label><button id="posterQuickUndo" title="실행 취소">↶</button><button id="posterQuickRedo" title="다시 실행">↷</button></div><div class="boardarea" id="boardArea"><svg id="posterScene" xmlns="http://www.w3.org/2000/svg" viewBox="-60 -60 1020 1320" role="img" aria-label="포스터 편집 공간" tabindex="0"></svg>
+  <div class="posterCanvasWrap"><div class="posterDrawControls" id="posterDrawControls"><label>크기<input type="range" id="posterBrushSize" min="2" max="60" value="8"><span class="value" id="posterBrushSizeValue">8</span></label><button id="posterQuickUndo" title="실행 취소">↶</button><button id="posterQuickRedo" title="다시 실행">↷</button></div><div class="boardarea" id="boardArea"><svg id="posterScene" xmlns="http://www.w3.org/2000/svg" viewBox="-60 -60 1020 1020" role="img" aria-label="포스터 편집 공간" tabindex="0"></svg>
    <div class="floatingedit" id="textEditor" hidden><label for="inlineText">문구를 입력하세요. 포스터에 바로 반영됩니다.</label><textarea id="inlineText" spellcheck="false"></textarea><div><span class="hint">줄바꿈: Enter · 완료: Ctrl/Cmd+Enter</span><button id="finishText" class="primary">완료</button></div></div>
   </div><div class="boardhint" id="boardHint">요소를 끌어 이동 · 모서리를 끌어 크기 변경 · 위쪽 원을 끌어 회전 · 글자 두 번 누르기: 내용 수정</div></div>
   <aside class="inspector">
    <section>
-    <h3 id="selectionTitle">선택한 요소</h3>
+    <h3 id="selectionTitle">선택한 것 꾸미기</h3>
     <div id="selectionControls" hidden>
-     <div class="propertyrow"><label class="colorlabel"><input type="color" id="elementColor" value="#6757d9">요소 색상</label></div>
-     <div class="palette" id="elementPalette"></div>
-     <div id="textProperties" hidden>
-      <label>문구<textarea id="posterText" rows="2" spellcheck="false"></textarea></label>
-      <div class="cleanprops"><label>글꼴<select id="textFont"><option value="own">내가 만든 폰트</option><option value="system">기본 글꼴</option></select></label><label>정렬<select id="posterAlign"><option value="left">왼쪽</option><option value="center">가운데</option><option value="right">오른쪽</option></select></label><label>글자 크기<input type="number" id="posterSize" min="12" max="400" step="2"></label><label>글자 간격<input type="number" id="posterSpacing" min="-5" max="60" step="1"></label></div><div class="miniinfo" id="fontUseNote"></div>
+     <div class="kid-colors" id="kidElementColors">
+      <button data-kidcolor="#25272c" style="background:#25272c" aria-label="검정"></button>
+      <button data-kidcolor="#ffffff" style="background:#ffffff" aria-label="흰색"></button>
+      <button data-kidcolor="#ff5f6d" style="background:#ff5f6d" aria-label="빨강"></button>
+      <button data-kidcolor="#ff9f43" style="background:#ff9f43" aria-label="주황"></button>
+      <button data-kidcolor="#ffd93d" style="background:#ffd93d" aria-label="노랑"></button>
+      <button data-kidcolor="#6bcb77" style="background:#6bcb77" aria-label="초록"></button>
+      <button data-kidcolor="#4d96ff" style="background:#4d96ff" aria-label="파랑"></button>
+      <button data-kidcolor="#6757d9" style="background:#6757d9" aria-label="보라"></button>
+      <button data-kidcolor="#ff82b2" style="background:#ff82b2" aria-label="분홍"></button>
+      <button data-kidcolor="#59c3c3" style="background:#59c3c3" aria-label="민트"></button>
+      <button data-kidcolor="#a66b4f" style="background:#a66b4f" aria-label="갈색"></button>
+      <button data-kidcolor="#b8bcc7" style="background:#b8bcc7" aria-label="회색"></button>
      </div>
-     <div class="cleanprops"><label>너비<input type="number" id="exactWidth" min="10" max="3000"></label><label>높이<input type="number" id="exactHeight" min="10" max="4000"></label><label>회전<input type="number" id="exactRotation" min="-360" max="360" step="1"></label></div>
-     <div class="clean-actions"><button id="duplicateElement">복제</button><button id="centerElement">가운데</button><button id="deleteElement">삭제</button><button id="bringForward">앞으로</button><button id="sendBackward">뒤로</button></div>
+     <label class="color-any">내가 원하는 색 <input type="color" id="elementColor" value="#6757d9"></label>
+     <div id="textProperties" hidden>
+      <label>글자 바꾸기<textarea id="posterText" rows="2" spellcheck="false"></textarea></label>
+      <label style="margin-top:8px">글자 크기 <input type="range" id="posterSize" min="20" max="250" step="2"></label>
+     </div>
+     <div class="simple-actions"><button id="duplicateElement">하나 더</button><button id="deleteElement">지우기</button></div>
     </div>
-    <div id="nothingSelected" class="emptyhint">선택 도구로 글자나 도형을 누르면 여기에서 바로 편집할 수 있습니다.</div>
+    <div id="nothingSelected" class="emptyhint">바꾸고 싶은 글자나 도형을 눌러 주세요.</div>
    </section>
-   <section><h3>배경</h3><div class="propertyrow"><label class="colorlabel"><input id="posterBg" type="color" value="#ffffff">배경 색상</label><select id="posterPattern" aria-label="배경 패턴"><option value="none">패턴 없음</option><option value="dots">도트</option><option value="grid">격자</option></select></div><div class="palette" id="backgroundPalette"></div></section>
-   <section><h3>내 그림</h3><div id="eggTray" class="eggtray"></div><div id="eggEmpty" class="emptyhint">폰트 만들기에서 ‘나만의 글자’를 그리면 여기에 나타납니다.</div></section>
-   <section><h3>빠른 시작</h3><div class="poster-start"><button id="templateTitle">제목 포스터</button><button id="templateCat">고양이 포스터</button><button id="addCat">도형 고양이 추가</button><button id="blankPoster">빈 종이</button></div></section>
-   <section class="fullwidth"><h3>요소 목록</h3><div id="layerList" class="layers"></div><div class="poster-help">요소를 직접 누르면 이동·크기·회전할 수 있습니다. 그리기 모드에서는 선택 박스가 나타나지 않습니다.</div></section>
+   <section>
+    <h3>배경색</h3>
+    <div class="kid-colors" id="kidBgColors">
+      <button data-bgcolor="#ffffff" style="background:#ffffff"></button><button data-bgcolor="#fff4dc" style="background:#fff4dc"></button>
+      <button data-bgcolor="#ffe6ee" style="background:#ffe6ee"></button><button data-bgcolor="#eee9ff" style="background:#eee9ff"></button>
+      <button data-bgcolor="#e5f1ff" style="background:#e5f1ff"></button><button data-bgcolor="#e5f8ef" style="background:#e5f8ef"></button>
+      <button data-bgcolor="#fff7b8" style="background:#fff7b8"></button><button data-bgcolor="#dff7f5" style="background:#dff7f5"></button>
+      <button data-bgcolor="#25272c" style="background:#25272c"></button><button data-bgcolor="#6757d9" style="background:#6757d9"></button>
+      <button data-bgcolor="#ff82b2" style="background:#ff82b2"></button><button data-bgcolor="#6bcb77" style="background:#6bcb77"></button>
+    </div>
+    <label class="color-any">내가 원하는 배경색 <input id="posterBg" type="color" value="#ffffff"></label>
+   </section>
+   <section><h3>내가 그린 그림</h3><div id="eggTray" class="eggtray"></div><div id="eggEmpty" class="emptyhint">‘나만의 글자’를 그리면 여기에 나타나요.</div></section>
+   <div class="compat-hidden" aria-hidden="true">
+    <div id="elementPalette"></div><div id="backgroundPalette"></div><div id="layerList"></div><div id="fontUseNote"></div>
+    <select id="textFont"><option value="own">내가 만든 폰트</option><option value="system">기본 글꼴</option></select>
+    <input id="posterSpacing" type="number" value="0"><select id="posterAlign"><option value="center">가운데</option></select>
+    <input id="exactWidth" type="number"><input id="exactHeight" type="number"><input id="exactRotation" type="number">
+    <button id="centerElement"></button><button id="bringForward"></button><button id="sendBackward"></button>
+    <select id="posterPattern"><option value="none">패턴 없음</option></select>
+    <button id="templateTitle"></button><button id="templateCat"></button><button id="addCat"></button><button id="blankPoster"></button>
+   </div>
   </aside>
  </div>
 </section>
