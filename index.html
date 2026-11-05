@@ -72,6 +72,63 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
  .posterbar .primary{padding:9px 10px}
 }
 
+
+/* Poster UI 3.2 — light, simple, iPad-first */
+.poster{max-width:1600px;margin:0 auto;padding:0 18px}
+.posterbar{background:#fff!important;color:var(--ink)!important;border:1px solid var(--line)!important;border-radius:14px!important;margin:0 0 12px!important;padding:9px 12px!important;box-shadow:none!important}
+.posterbar button,.posterbar select{background:#fff!important;color:var(--ink)!important;border-color:var(--line)!important}
+.posterbar .primary{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important}
+.posterbar .hint,.posterbar .save{color:var(--muted)!important}
+.posterModeBadge{background:var(--soft)!important;color:var(--accent)!important}
+.postergrid,.posterWorkspaceDraw .postergrid{grid-template-columns:64px minmax(360px,1fr) 270px!important;gap:12px!important}
+.toolrail,.posterWorkspaceDraw .toolrail{background:#fff!important;border:1px solid var(--line)!important;border-radius:14px!important;padding:7px!important;box-shadow:none!important;min-height:0!important}
+.toolrail button,.posterWorkspaceDraw .toolrail button{color:var(--ink)!important;background:#fff!important;border:1px solid transparent!important}
+.toolrail button:hover,.posterWorkspaceDraw .toolrail button:hover{background:#f7f5ff!important}
+.toolrail button.active,.posterWorkspaceDraw .toolrail button.active{background:var(--soft)!important;color:var(--accent)!important;border-color:#c9c1ff!important}
+.railsep{border-color:var(--line)!important}
+.boardarea,.posterWorkspaceDraw .boardarea{height:calc(100vh - 220px)!important;min-height:540px!important;border-radius:14px!important;background-color:#ededf2!important}
+.inspector,.posterWorkspaceDraw .inspector{display:block!important;background:#fff;border:1px solid var(--line);border-radius:14px;max-height:calc(100vh - 220px);overflow:auto;padding:14px}
+.inspector section{padding:0 0 14px;margin:0 0 14px;border-bottom:1px solid var(--line)}
+.inspector section:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
+.inspector h3{font-size:12px;margin:0 0 10px;color:#555b68}
+.inspector .divider{display:none!important}
+.posterDrawControls,.posterWorkspaceDraw .posterDrawControls{display:none!important}
+.posterWorkspaceDraw #posterScene{cursor:crosshair}
+.inspectorToggle{display:none!important}
+.quickstyle{display:flex;align-items:center;gap:7px;padding:0 4px 0 0}
+.quickstyle label{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.quickstyle input[type=color]{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;padding:2px;background:#fff}
+.quickstyle .brushsize{width:88px}
+.quickstyle .brushwrap{display:none;align-items:center;gap:5px}
+.posterWorkspaceDraw .quickstyle .brushwrap{display:flex}
+.posterWorkspaceDraw .posterModeBadge{display:inline-flex}
+.cleanprops{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.cleanprops label{font-size:10px;color:var(--muted)}
+.cleanprops input,.cleanprops select{margin-top:3px}
+.clean-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}
+.clean-actions button{padding:7px 4px;font-size:11px}
+.eggtray{grid-template-columns:repeat(3,1fr)}
+.layers{max-height:180px}
+.poster-help{font-size:10px;color:var(--muted);line-height:1.55;margin-top:8px}
+.poster-start{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.poster-start button{font-size:11px;padding:8px 5px}
+@media(max-width:1100px){
+ .postergrid,.posterWorkspaceDraw .postergrid{grid-template-columns:58px minmax(0,1fr) 230px!important}
+ .poster{padding:0 10px}
+}
+@media(max-width:850px){
+ .poster{padding:0}
+ .posterbar{border-radius:0!important;border-left:0!important;border-right:0!important;margin:0!important}
+ .postergrid,.posterWorkspaceDraw .postergrid{grid-template-columns:54px minmax(0,1fr)!important;gap:0!important}
+ .toolrail,.posterWorkspaceDraw .toolrail{border-radius:0!important;border-left:0!important;border-bottom:0!important;min-height:calc(100vh - 145px)!important}
+ .boardarea,.posterWorkspaceDraw .boardarea{height:calc(100vh - 145px)!important;min-height:520px!important;border-radius:0!important;border-right:0!important;border-bottom:0!important}
+ .inspector,.posterWorkspaceDraw .inspector{position:fixed!important;z-index:30;left:54px;right:0;bottom:0;max-height:46vh!important;border-radius:16px 16px 0 0!important;box-shadow:0 -8px 28px #0002;display:none!important}
+ .poster.inspector-open .inspector,.posterWorkspaceDraw.inspector-open .inspector{display:block!important}
+ .inspectorToggle{display:inline-flex!important}
+ .quickstyle{margin-left:auto}
+ .posterbar .hint,.posterbar .save,#exportSize{display:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -97,7 +154,7 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
 </section>
 </main>
 <section class="poster" id="posterWorkspace" hidden>
- <div class="posterbar"><div class="history"><button id="posterUndo" class="iconbutton" title="실행 취소" aria-label="포스터 실행 취소">↶</button><button id="posterRedo" class="iconbutton" title="다시 실행" aria-label="포스터 다시 실행">↷</button></div><span class="posterModeBadge" id="posterModeBadge">그리기 모드</span><span class="hint">두 손가락 톡: 취소 · 세 손가락 톡: 다시 실행</span><span class="spacer"></span><button id="inspectorToggle" class="inspectorToggle">색상 · 레이어</button><span class="save" id="posterSaveStatus">자동 저장</span><select id="exportSize" aria-label="PNG 이미지 크기"><option value="2">1800 × 2400</option><option value="3">2700 × 3600</option></select><button id="posterPng" class="primary">PNG 저장 ↗</button></div>
+ <div class="posterbar"><div class="history"><button id="posterUndo" class="iconbutton" title="실행 취소" aria-label="포스터 실행 취소">↶</button><button id="posterRedo" class="iconbutton" title="다시 실행" aria-label="포스터 다시 실행">↷</button></div><span class="posterModeBadge" id="posterModeBadge">선택 모드</span><div class="quickstyle"><label>색상 <input type="color" id="quickColor" value="#6757d9"></label><div class="brushwrap"><label>펜 크기 <input class="brushsize" type="range" id="quickBrushSize" min="2" max="60" value="8"></label></div></div><span class="hint">두 손가락 톡: 취소 · 세 손가락 톡: 다시 실행</span><span class="spacer"></span><button id="inspectorToggle" class="inspectorToggle">편집</button><span class="save" id="posterSaveStatus">자동 저장</span><select id="exportSize" aria-label="PNG 이미지 크기"><option value="2">1800 × 2400</option><option value="3">2700 × 3600</option></select><button id="posterPng" class="primary">PNG 저장 ↗</button></div>
  <div class="postergrid">
   <div class="toolrail" aria-label="포스터 도구">
    <button id="selectTool" class="active" title="선택하고 이동"><b>↖</b>선택</button>
@@ -116,30 +173,23 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
   </div><div class="boardhint" id="boardHint">요소를 끌어 이동 · 모서리를 끌어 크기 변경 · 위쪽 원을 끌어 회전 · 글자 두 번 누르기: 내용 수정</div></div>
   <aside class="inspector">
    <section>
-    <h3 id="selectionTitle">종이 설정</h3>
+    <h3 id="selectionTitle">선택한 요소</h3>
     <div id="selectionControls" hidden>
-     <div class="propertyrow"><label class="colorlabel"><input type="color" id="elementColor" value="#6757d9">선택 요소 색</label></div>
+     <div class="propertyrow"><label class="colorlabel"><input type="color" id="elementColor" value="#6757d9">요소 색상</label></div>
      <div class="palette" id="elementPalette"></div>
      <div id="textProperties" hidden>
       <label>문구<textarea id="posterText" rows="2" spellcheck="false"></textarea></label>
-      <div class="propertyrow"><label>글꼴<select id="textFont"><option value="own">내가 만든 폰트</option><option value="system">기본 글꼴</option></select></label></div>
-      <div class="propertyrow"><label>글자 크기<input type="number" id="posterSize" min="12" max="400" step="2"></label><label>글자 간격<input type="number" id="posterSpacing" min="-5" max="60" step="1"></label></div>
-      <label>정렬<select id="posterAlign"><option value="left">왼쪽</option><option value="center">가운데</option><option value="right">오른쪽</option></select></label><div class="miniinfo" id="fontUseNote"></div>
+      <div class="cleanprops"><label>글꼴<select id="textFont"><option value="own">내가 만든 폰트</option><option value="system">기본 글꼴</option></select></label><label>정렬<select id="posterAlign"><option value="left">왼쪽</option><option value="center">가운데</option><option value="right">오른쪽</option></select></label><label>글자 크기<input type="number" id="posterSize" min="12" max="400" step="2"></label><label>글자 간격<input type="number" id="posterSpacing" min="-5" max="60" step="1"></label></div><div class="miniinfo" id="fontUseNote"></div>
      </div>
-     <div class="minibuttons" style="margin-top:10px"><button id="duplicateElement">복제</button><button id="deleteElement">삭제</button><button id="centerElement">가운데</button></div>
-     <div class="minibuttons" style="margin-top:6px"><button id="bringForward">앞으로</button><button id="sendBackward">뒤로</button></div>
-     <details style="margin-top:10px"><summary>정확한 크기와 회전</summary><div class="propertyrow"><label>너비<input type="number" id="exactWidth" min="10" max="3000"></label><label>높이<input type="number" id="exactHeight" min="10" max="4000"></label></div><label>회전 각도<input type="number" id="exactRotation" min="-360" max="360" step="1"></label></details>
+     <div class="cleanprops"><label>너비<input type="number" id="exactWidth" min="10" max="3000"></label><label>높이<input type="number" id="exactHeight" min="10" max="4000"></label><label>회전<input type="number" id="exactRotation" min="-360" max="360" step="1"></label></div>
+     <div class="clean-actions"><button id="duplicateElement">복제</button><button id="centerElement">가운데</button><button id="deleteElement">삭제</button><button id="bringForward">앞으로</button><button id="sendBackward">뒤로</button></div>
     </div>
-    <div id="nothingSelected" class="emptyhint">글자나 도형을 누르면 선택됩니다.<br>선택한 요소의 색을 여기서 바꿀 수 있어요.</div>
+    <div id="nothingSelected" class="emptyhint">선택 도구로 글자나 도형을 누르면 여기에서 바로 편집할 수 있습니다.</div>
    </section>
-   <hr class="divider">
-   <section><h3>배경</h3><div class="propertyrow"><label class="colorlabel"><input id="posterBg" type="color" value="#ffffff">종이 색</label><select id="posterPattern" aria-label="배경 패턴"><option value="none">패턴 없음</option><option value="dots">도트</option><option value="grid">격자</option></select></div><div class="palette" id="backgroundPalette"></div></section>
-   <hr class="divider">
-   <section><h3>내 이스터에그</h3><div id="eggTray" class="eggtray"></div><div id="eggEmpty" class="emptyhint">폰트 만들기에서 ‘나만의 글자’를 그리면 여기에 나타납니다.</div><div class="miniinfo">그림을 누르면 포스터에 추가됩니다.</div></section>
-   <hr class="divider">
-   <section><details><summary>쉽게 시작하기</summary><div class="templategrid"><button id="templateTitle">제목 포스터</button><button id="templateCat">고양이 포스터</button></div><button id="addCat" style="width:100%;font-size:12px">원과 세모로 만든 고양이 추가</button><button id="blankPoster" style="width:100%;margin-top:6px;font-size:12px">빈 종이로 시작</button><div class="miniinfo">고양이의 귀, 눈, 얼굴을 각각 선택해 색과 모양을 바꿔 보세요.</div></details></section>
-   <hr class="divider">
-   <section class="fullwidth"><details open><summary>요소 목록</summary><div id="layerList" class="layers"></div></details></section>
+   <section><h3>배경</h3><div class="propertyrow"><label class="colorlabel"><input id="posterBg" type="color" value="#ffffff">배경 색상</label><select id="posterPattern" aria-label="배경 패턴"><option value="none">패턴 없음</option><option value="dots">도트</option><option value="grid">격자</option></select></div><div class="palette" id="backgroundPalette"></div></section>
+   <section><h3>내 그림</h3><div id="eggTray" class="eggtray"></div><div id="eggEmpty" class="emptyhint">폰트 만들기에서 ‘나만의 글자’를 그리면 여기에 나타납니다.</div></section>
+   <section><h3>빠른 시작</h3><div class="poster-start"><button id="templateTitle">제목 포스터</button><button id="templateCat">고양이 포스터</button><button id="addCat">도형 고양이 추가</button><button id="blankPoster">빈 종이</button></div></section>
+   <section class="fullwidth"><h3>요소 목록</h3><div id="layerList" class="layers"></div><div class="poster-help">요소를 직접 누르면 이동·크기·회전할 수 있습니다. 그리기 모드에서는 선택 박스가 나타나지 않습니다.</div></section>
   </aside>
  </div>
 </section>
