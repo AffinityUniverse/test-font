@@ -16,6 +16,62 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
 @media(max-width:1150px){.layout{grid-template-columns:210px minmax(300px,1fr)}.right{grid-column:1/-1}.right .rightbody{display:grid;grid-template-columns:1fr 1fr;gap:16px}.postergrid{grid-template-columns:60px minmax(280px,1fr) 225px}.poster{padding:0 12px}.inspector{padding:12px}.posterbar .hint{display:none}}
 @media(max-width:780px){header{padding:12px 14px}.brand{font-size:16px}.save,.version{display:none}.topright{gap:5px}.topright button{font-size:11px;padding:8px}.modebar{padding:0 10px;margin:12px 0}.layout{display:flex;flex-direction:column;padding:0 10px;margin:12px auto}.layout>.panel:first-child{order:2}.center{order:1}.right{order:3}.glyphgrid{grid-template-columns:repeat(7,1fr)}.glyph{font-size:19px}.right .rightbody{display:block}.canvaswrap{padding:12px}.poster{padding:0 10px}.postergrid{grid-template-columns:1fr;gap:8px}.toolrail{display:flex;overflow:auto;padding:4px}.toolrail button{min-width:48px;padding:6px}.toolrail b{font-size:20px}.railsep{border-top:0;border-left:1px solid var(--line)}.boardarea{height:68vh;min-height:420px}.inspector{max-height:none;display:grid;grid-template-columns:1fr 1fr;gap:12px}.inspector>.divider{display:none}.inspector .fullwidth{grid-column:1/-1}.posterbar{padding:7px;gap:5px}.posterbar select{max-width:110px}.posterbar .spacer{display:none}.posterbar .save{display:none}.iconbutton{width:34px;height:34px}.posterbar .primary{margin-left:auto}.foot{margin:15px auto}.floatingedit{top:7%}}
 @media(max-width:420px){.inspector{display:block}.inspector>.divider{display:block}.glyphgrid{grid-template-columns:repeat(6,1fr)}.posterbar button{font-size:12px}.posterbar .iconbutton{font-size:22px}.tools button{padding:7px 8px;font-size:12px}}
+
+/* iPad / Procreate-inspired poster workspace */
+.posterWorkspaceDraw .postergrid{grid-template-columns:54px minmax(300px,1fr) 0;gap:10px}
+.posterWorkspaceDraw .inspector{display:none}
+.posterWorkspaceDraw .boardarea{height:calc(100vh - 178px);min-height:560px;border-radius:18px;background:#d9d9df}
+.posterWorkspaceDraw .toolrail{background:#24242a;border:0;border-radius:18px;padding:8px 5px;box-shadow:0 8px 24px #0002}
+.posterWorkspaceDraw .toolrail button{color:#fff;background:transparent;border:0}
+.posterWorkspaceDraw .toolrail button:hover{background:#ffffff12}
+.posterWorkspaceDraw .toolrail button.active{background:#6757d9;color:#fff;border:0}
+.posterWorkspaceDraw .railsep{border-color:#ffffff25}
+.posterWorkspaceDraw .posterbar{background:#24242a;border:0;color:#fff;border-radius:0;margin:0 -20px 10px;padding:9px 18px}
+.posterWorkspaceDraw .posterbar button,.posterWorkspaceDraw .posterbar select{background:#303038;border-color:#45454e;color:#fff}
+.posterWorkspaceDraw .posterbar .primary{background:#6757d9;border-color:#6757d9}
+.posterWorkspaceDraw .posterbar .hint,.posterWorkspaceDraw .posterbar .save{color:#c8c8d0}
+.posterWorkspaceDraw .boardhint{display:none}
+.posterDrawControls{display:none}
+.posterWorkspaceDraw .posterDrawControls{display:flex;position:absolute;z-index:6;left:9px;top:50%;transform:translateY(-50%);flex-direction:column;align-items:center;gap:12px;padding:12px 8px;border-radius:18px;background:#24242ae8;box-shadow:0 8px 24px #0003;color:#fff}
+.posterDrawControls label{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:10px;color:#dedee5}
+.posterDrawControls input[type=range]{writing-mode:vertical-lr;direction:rtl;width:28px;height:132px;accent-color:#6757d9}
+.posterDrawControls .value{font-size:10px;color:#fff;min-width:32px;text-align:center}
+.posterDrawControls button{width:36px;height:36px;padding:0;border:0;border-radius:50%;background:#34343d;color:#fff;font-size:20px}
+.posterDrawControls button:active{transform:scale(.93)}
+.posterCanvasWrap{position:relative}
+.posterWorkspaceDraw .posterCanvasWrap{min-width:0}
+.posterWorkspaceDraw #posterScene{cursor:crosshair}
+.posterWorkspaceDraw #posterScene .artitem{cursor:crosshair}
+.posterModeBadge{display:none}
+.posterWorkspaceDraw .posterModeBadge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#6757d9;color:#fff;font-size:11px;font-weight:700}
+.posterModeBadge:before{content:'●';font-size:8px}
+.inspectorToggle{display:none}
+@media(max-width:1180px){
+ .postergrid{grid-template-columns:58px minmax(0,1fr)}
+ .inspector{grid-column:1/-1;max-height:none}
+ .posterWorkspaceDraw .postergrid{grid-template-columns:50px minmax(0,1fr)}
+ .posterWorkspaceDraw .inspector{display:none}
+ .inspectorToggle{display:inline-flex}
+}
+@media(max-width:900px){
+ .poster{padding:0}
+ .posterbar{border-radius:0;border-left:0;border-right:0;margin-bottom:0}
+ .postergrid{grid-template-columns:52px minmax(0,1fr);gap:0}
+ .toolrail{border-radius:0;border-left:0;border-bottom:0;min-height:calc(100vh - 142px);align-content:start}
+ .boardarea{height:calc(100vh - 142px);min-height:520px;border-radius:0;border-right:0;border-bottom:0}
+ .posterWorkspaceDraw .boardarea{height:calc(100vh - 142px);min-height:520px;border-radius:0}
+ .posterWorkspaceDraw .posterbar{margin:0}
+ .posterWorkspaceDraw .toolrail{border-radius:0;min-height:calc(100vh - 142px)}
+ .posterDrawControls{left:58px}
+ .inspector{position:fixed;z-index:30;left:54px;right:0;bottom:0;max-height:48vh;border-radius:18px 18px 0 0;box-shadow:0 -12px 35px #0003;display:none}
+ .poster.inspector-open .inspector{display:block}
+ .posterWorkspaceDraw.inspector-open .inspector{display:block}
+ .posterbar .hint,.posterbar .save,#exportSize{display:none}
+ .posterbar{gap:4px;padding:7px 8px}
+ .posterbar .iconbutton{width:36px;height:36px}
+ .posterbar .primary{padding:9px 10px}
+}
+
 </style>
 </head>
 <body>
@@ -41,7 +97,7 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
 </section>
 </main>
 <section class="poster" id="posterWorkspace" hidden>
- <div class="posterbar"><div class="history"><button id="posterUndo" class="iconbutton" title="실행 취소 (Ctrl/Cmd+Z)" aria-label="포스터 실행 취소">↶</button><button id="posterRedo" class="iconbutton" title="다시 실행 (Ctrl/Cmd+Shift+Z)" aria-label="포스터 다시 실행">↷</button></div><span class="hint">두 손가락 톡: 취소 · 세 손가락 톡: 다시 실행</span><span class="spacer"></span><span class="save" id="posterSaveStatus">자동 저장</span><select id="exportSize" aria-label="PNG 이미지 크기"><option value="2">1800 × 2400</option><option value="3">2700 × 3600</option></select><button id="posterPng" class="primary">PNG 이미지 저장 ↗</button></div>
+ <div class="posterbar"><div class="history"><button id="posterUndo" class="iconbutton" title="실행 취소" aria-label="포스터 실행 취소">↶</button><button id="posterRedo" class="iconbutton" title="다시 실행" aria-label="포스터 다시 실행">↷</button></div><span class="posterModeBadge" id="posterModeBadge">그리기 모드</span><span class="hint">두 손가락 톡: 취소 · 세 손가락 톡: 다시 실행</span><span class="spacer"></span><button id="inspectorToggle" class="inspectorToggle">색상 · 레이어</button><span class="save" id="posterSaveStatus">자동 저장</span><select id="exportSize" aria-label="PNG 이미지 크기"><option value="2">1800 × 2400</option><option value="3">2700 × 3600</option></select><button id="posterPng" class="primary">PNG 저장 ↗</button></div>
  <div class="postergrid">
   <div class="toolrail" aria-label="포스터 도구">
    <button id="selectTool" class="active" title="선택하고 이동"><b>↖</b>선택</button>
@@ -53,9 +109,9 @@ header{min-height:70px;background:#fff;border-bottom:1px solid var(--line);displ
    <button data-addshape="star" title="별 추가"><b>☆</b>별</button>
    <button data-addshape="heart" title="하트 추가"><b>♡</b>하트</button>
    <div class="railsep"></div>
-   <button id="posterPen" title="포스터에 직접 그리기"><b>✎</b>펜</button>
+   <button id="posterPen" title="계속 이어서 그리기"><b>✎</b>그리기</button>
   </div>
-  <div><div class="boardarea" id="boardArea"><svg id="posterScene" xmlns="http://www.w3.org/2000/svg" viewBox="-60 -60 1020 1320" role="img" aria-label="포스터 편집 공간" tabindex="0"></svg>
+  <div class="posterCanvasWrap"><div class="posterDrawControls" id="posterDrawControls"><label>크기<input type="range" id="posterBrushSize" min="2" max="60" value="8"><span class="value" id="posterBrushSizeValue">8</span></label><button id="posterQuickUndo" title="실행 취소">↶</button><button id="posterQuickRedo" title="다시 실행">↷</button></div><div class="boardarea" id="boardArea"><svg id="posterScene" xmlns="http://www.w3.org/2000/svg" viewBox="-60 -60 1020 1320" role="img" aria-label="포스터 편집 공간" tabindex="0"></svg>
    <div class="floatingedit" id="textEditor" hidden><label for="inlineText">문구를 입력하세요. 포스터에 바로 반영됩니다.</label><textarea id="inlineText" spellcheck="false"></textarea><div><span class="hint">줄바꿈: Enter · 완료: Ctrl/Cmd+Enter</span><button id="finishText" class="primary">완료</button></div></div>
   </div><div class="boardhint" id="boardHint">요소를 끌어 이동 · 모서리를 끌어 크기 변경 · 위쪽 원을 끌어 회전 · 글자 두 번 누르기: 내용 수정</div></div>
   <aside class="inspector">
