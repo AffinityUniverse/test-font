@@ -145,17 +145,17 @@ $('wordInput').oninput=renderPreview;
 let serial=0;const uid=()=>'item-'+Date.now().toString(36)+'-'+(++serial).toString(36);
 const num=(n,f,min=-5000,max=5000)=>Number.isFinite(Number(n))?Math.min(max,Math.max(min,Number(n))):f;
 const safeColor=(s,f='#6757d9')=>/^#[0-9a-f]{6}$/i.test(s||'')?s:f;
-function baseItem(kind,fields={}){return{id:uid(),kind,x:450,y:500,sx:1,sy:1,rot:0,color:currentColor,...fields};}
-function newText(text='글자를 입력하세요',fields={}){return baseItem('text',{text,size:100,spacing:0,align:'center',own:true,...fields});}
+function baseItem(kind,fields={}){return{id:uid(),kind,x:450,y:450,sx:1,sy:1,rot:0,color:currentColor,...fields};}
+function newText(text='글자를 입력하세요',fields={}){return baseItem('text',{text,size:90,spacing:0,align:'center',own:true,...fields});}
 function newShape(shape,fields={}){return baseItem('shape',{shape,w:190,h:190,...fields});}
-function titleTemplate(){return{version:3,width:900,height:1200,bg:'#f5f1ff',pattern:'none',items:[
+function titleTemplate(){return{version:3,width:900,height:900,bg:'#f5f1ff',pattern:'none',items:[
  newShape('circle',{x:730,y:240,w:300,h:300,color:'#e4dcff'}),
  newShape('star',{x:210,y:330,w:120,h:120,color:'#ffbe61',rot:-14}),
- newText('나만의\n작은 우주',{x:450,y:580,size:115,color:'#51449c'}),
- newText('MY TYPE · MY STORY',{x:450,y:1030,size:27,own:false,color:'#7668a3',spacing:3})
+ newText('나만의\n작은 우주',{x:450,y:500,size:115,color:'#51449c'}),
+ newText('MY TYPE · MY STORY',{x:450,y:820,size:27,own:false,color:'#7668a3',spacing:3})
 ]};}
 function migrate(old){
- const d={version:3,width:900,height:1200,bg:safeColor(old.bg,'#ffffff'),pattern:['dots','grid'].includes(old.pattern)?old.pattern:'none',items:[]};
+ const d={version:3,width:900,height:900,bg:safeColor(old.bg,'#ffffff'),pattern:['dots','grid'].includes(old.pattern)?old.pattern:'none',items:[]};
  for(const o of old.items||[]){
   const common={x:num(o.x,450),y:num(o.y,500),sx:num(o.scale,1,.03,30),sy:num(o.scale,1,.03,30),rot:num(o.rot,0,-360,360),color:safeColor(o.color)};
   if(o.kind==='text')d.items.push(newText(String(o.text||''),{...common,size:num(o.size,65,12,400),spacing:num(o.spacing,0,-5,60),align:['left','right'].includes(o.align)?o.align:'center',own:true}));
@@ -165,6 +165,12 @@ function migrate(old){
 }
 let saved=read(KEYS.poster,null),oldPoster=saved?null:read(KEYS.oldPoster,null);
 let poster=saved&&saved.version===3&&Array.isArray(saved.items)?saved:oldPoster&&Array.isArray(oldPoster.items)?migrate(oldPoster):titleTemplate();
+if(poster.height!==900){
+ const oldH=Number(poster.height)||1200,ratio=900/oldH;
+ poster.items.forEach(it=>{it.y=Math.max(0,Math.min(900,(Number(it.y)||450)*ratio));});
+ poster.width=900;poster.height=900;
+ if(!locked)put(KEYS.poster,JSON.stringify(poster));
+}
 if(!saved&&oldPoster&&!locked)put(KEYS.poster,JSON.stringify(poster));
 let selected=null,ptool='select',undo=[],redo=[],transaction=null,inputTimer=null,drag=null,snapLines=[],penPoints=null,posterBrushSize=8;
 let editing=null,touchSession=null;const touches=new Map(),scene=$('posterScene');
@@ -221,9 +227,9 @@ function itemSVG(it,interactive=false){
 function patternSVG(){
  if(poster.pattern==='none')return'';
  const inside=poster.pattern==='grid'?'<path d="M60 0H0V60" fill="none" stroke="#6757d9" stroke-opacity=".12" stroke-width="1"/>':'<circle cx="8" cy="8" r="2.5" fill="#6757d9" fill-opacity=".18"/>';
- return `<defs><pattern id="paperPattern" width="60" height="60" patternUnits="userSpaceOnUse">${inside}</pattern></defs><rect width="900" height="1200" fill="url(#paperPattern)"/>`;
+ return `<defs><pattern id="paperPattern" width="60" height="60" patternUnits="userSpaceOnUse">${inside}</pattern></defs><rect width="900" height="900" fill="url(#paperPattern)"/>`;
 }
-function artSVG(){return`<rect width="900" height="1200" fill="${esc(safeColor(poster.bg,'#ffffff'))}"/>${patternSVG()}${poster.items.map(i=>itemSVG(i)).join('')}`;}
+function artSVG(){return`<rect width="900" height="900" fill="${esc(safeColor(poster.bg,'#ffffff'))}"/>${patternSVG()}${poster.items.map(i=>itemSVG(i)).join('')}`;}
 function uiScale(){const m=scene.getScreenCTM();return m?1/Math.max(.1,m.a):1.8;}
 function selectionSVG(){
  const it=selectedItem();if(!it||editing===it.id)return'';
@@ -236,10 +242,10 @@ function selectionSVG(){
  s+=`<g data-handle="rotate" style="cursor:grab"><circle cy="${rotY}" r="${r*2.5}" fill="transparent"/><circle cy="${rotY}" r="${r*1.15}" fill="#6757d9" stroke="white" stroke-width="${u*2}"/></g></g>`;return s;
 }
 function renderPoster(){
- let overlays=snapLines.map(axis=>axis==='x'?'<path d="M450 0V1200"/>':'<path d="M0 600H900"/>').join('');
+ let overlays=snapLines.map(axis=>axis==='x'?'<path d="M450 0V900"/>':'<path d="M0 450H900"/>').join('');
  overlays=overlays?`<g stroke="#df68d9" stroke-width="2" stroke-dasharray="8 8" pointer-events="none">${overlays}</g>`:'';
  const pen=penPoints?`<path d="${penPoints.map((p,i)=>(i?'L':'M')+p.x+' '+p.y).join(' ')}" fill="none" stroke="${esc(currentColor)}" stroke-width="${posterBrushSize}" stroke-linecap="round" stroke-linejoin="round"/>`:'';
- scene.innerHTML=`<defs><clipPath id="paperClip"><rect width="900" height="1200"/></clipPath></defs><rect class="paper" width="900" height="1200" fill="white"/><g clip-path="url(#paperClip)"><rect width="900" height="1200" fill="${esc(safeColor(poster.bg,'#ffffff'))}"/>${patternSVG()}${poster.items.map(it=>itemSVG(it,true)).join('')}${pen}${overlays}</g>${selectionSVG()}`;
+ scene.innerHTML=`<defs><clipPath id="paperClip"><rect width="900" height="900"/></clipPath></defs><rect class="paper" width="900" height="900" fill="white"/><g clip-path="url(#paperClip)"><rect width="900" height="900" fill="${esc(safeColor(poster.bg,'#ffffff'))}"/>${patternSVG()}${poster.items.map(it=>itemSVG(it,true)).join('')}${pen}${overlays}</g>${selectionSVG()}`;
 }
 const shapeLabels={circle:'원',square:'네모',triangle:'세모',star:'별',heart:'하트'};
 function itemLabel(it){return it.kind==='text'?(it.text.replace(/\n/g,' ').trim()||'빈 문구'):it.kind==='egg'?it.name:it.kind==='stroke'?'내 그림':shapeLabels[it.shape]||'도형';}
@@ -301,9 +307,18 @@ function palette(id,colors,apply){
 }
 palette('elementPalette',['#25272c','#6757d9','#ef86ad','#ffb45e','#6fc5ae','#ffffff'],c=>{currentColor=c;const it=selectedItem();if(it)change(()=>it.color=c);});
 palette('backgroundPalette',['#ffffff','#f5f1ff','#fff3db','#fbe5ed','#e8f5f0','#25272c'],c=>change(()=>poster.bg=c));
+document.querySelectorAll('[data-kidcolor]').forEach(b=>b.onclick=()=>{
+ const c=b.dataset.kidcolor;currentColor=c;
+ if($('quickColor'))$('quickColor').value=c;
+ if($('elementColor'))$('elementColor').value=c;
+ const it=selectedItem();if(it)change(()=>it.color=c);else renderPoster();
+});
+document.querySelectorAll('[data-bgcolor]').forEach(b=>b.onclick=()=>{
+ const c=b.dataset.bgcolor;if($('posterBg'))$('posterBg').value=c;change(()=>poster.bg=c);
+});
 $('duplicateElement').onclick=()=>{const it=selectedItem();if(it)add({...clone(it),id:uid(),x:it.x+28,y:it.y+28});};
 $('deleteElement').onclick=()=>{finishText();const it=selectedItem();if(it)change(()=>{poster.items=poster.items.filter(x=>x.id!==selected);selected=null;});};
-$('centerElement').onclick=()=>{const it=selectedItem();if(it)change(()=>{it.x=450;it.y=600;});};
+$('centerElement').onclick=()=>{const it=selectedItem();if(it)change(()=>{it.x=450;it.y=450;});};
 function order(delta){const it=selectedItem();if(!it)return;const i=poster.items.indexOf(it),j=i+delta;if(j<0||j>=poster.items.length)return;change(()=>{poster.items.splice(i,1);poster.items.splice(j,0,it);});}
 $('bringForward').onclick=()=>order(1);$('sendBackward').onclick=()=>order(-1);
 
@@ -322,7 +337,7 @@ scene.onpointerdown=e=>{
  finishText();commit();scene.focus();
  const p=point(e);
  if(ptool==='pen'){
-  if(p.x<0||p.y<0||p.x>900||p.y>1200)return;
+  if(p.x<0||p.y<0||p.x>900||p.y>900)return;
   begin();selected=null;penPoints=[p];drag={type:'pen',pointer:e.pointerId};renderPoster();return;
  }
  const h=e.target.closest('[data-handle]')?.dataset.handle,it=selectedItem();
@@ -343,7 +358,7 @@ scene.onpointermove=e=>{
  const it=poster.items.find(i=>i.id===d.id);if(!it)return;
  if(d.type==='move'){
   it.x=d.origin.x+p.x-d.start.x;it.y=d.origin.y+p.y-d.start.y;snapLines=[];
-  if(Math.abs(it.x-450)<8){it.x=450;snapLines.push('x');}if(Math.abs(it.y-600)<8){it.y=600;snapLines.push('y');}
+  if(Math.abs(it.x-450)<8){it.x=450;snapLines.push('x');}if(Math.abs(it.y-450)<8){it.y=450;snapLines.push('y');}
  }else if(d.type==='rotate'){
   let rot=d.origin.rot+Math.atan2(p.y-it.y,p.x-it.x)*180/Math.PI-d.startAngle;
   if(e.shiftKey||Math.abs(rot/15-Math.round(rot/15))<.12)rot=Math.round(rot/15)*15;it.rot=((rot+540)%360)-180;
@@ -394,13 +409,13 @@ function catPieces(){
 $('addCat').onclick=()=>{finishText();commit();begin();const p=catPieces();poster.items.push(...p);selected=p[4].id;commit();syncPoster();toast('얼굴·귀·눈을 각각 선택해 바꿔 보세요.');};
 function replacePoster(doc){if(poster.items.length&&!confirm('현재 포스터를 바꿀까요? 실행 취소로 되돌릴 수 있습니다.'))return;finishText();commit();begin();poster=doc;selected=null;commit();syncPoster();}
 $('templateTitle').onclick=()=>replacePoster(titleTemplate());
-$('templateCat').onclick=()=>replacePoster({version:3,width:900,height:1200,bg:'#fff3db',pattern:'none',items:[newText('나의 고양이',{x:450,y:260,size:106,color:'#885e3c'}),...catPieces(),newText('동그라미와 세모로 만든 친구',{x:450,y:970,size:32,own:false,color:'#9b7658'})]});
-$('blankPoster').onclick=()=>replacePoster({version:3,width:900,height:1200,bg:'#ffffff',pattern:'none',items:[]});
+$('templateCat').onclick=()=>replacePoster({version:3,width:900,height:900,bg:'#fff3db',pattern:'none',items:[newText('나의 고양이',{x:450,y:260,size:106,color:'#885e3c'}),...catPieces(),newText('동그라미와 세모로 만든 친구',{x:450,y:835,size:32,own:false,color:'#9b7658'})]});
+$('blankPoster').onclick=()=>replacePoster({version:3,width:900,height:900,bg:'#ffffff',pattern:'none',items:[]});
 $('posterPng').onclick=async()=>{
  finishText();commit();const btn=$('posterPng');btn.disabled=true;btn.textContent='이미지 만드는 중…';
  try{
-  const scale=+$('exportSize').value,w=900*scale,h=1200*scale;
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 900 1200"><defs><clipPath id="exportClip"><rect width="900" height="1200"/></clipPath></defs><g clip-path="url(#exportClip)">${artSVG()}</g></svg>`;
+  const scale=+$('exportSize').value,w=900*scale,h=900*scale;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 900 900"><defs><clipPath id="exportClip"><rect width="900" height="900"/></clipPath></defs><g clip-path="url(#exportClip)">${artSVG()}</g></svg>`;
   const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml;charset=utf-8'}));
   try{const image=new Image();image.src=url;await image.decode();const cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(image,0,0,w,h);
    const blob=await new Promise(r=>cv.toBlob(r,'image/png'));if(!blob)throw Error('PNG를 만들지 못했습니다.');download(blob,'my-typography-poster.png');toast(w+' × '+h+' PNG 이미지를 저장했습니다.');
