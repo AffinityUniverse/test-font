@@ -166,7 +166,7 @@ function migrate(old){
 let saved=read(KEYS.poster,null),oldPoster=saved?null:read(KEYS.oldPoster,null);
 let poster=saved&&saved.version===3&&Array.isArray(saved.items)?saved:oldPoster&&Array.isArray(oldPoster.items)?migrate(oldPoster):titleTemplate();
 if(!saved&&oldPoster&&!locked)put(KEYS.poster,JSON.stringify(poster));
-let selected=null,ptool='select',undo=[],redo=[],transaction=null,inputTimer=null,drag=null,snapLines=[],penPoints=null;
+let selected=null,ptool='select',undo=[],redo=[],transaction=null,inputTimer=null,drag=null,snapLines=[],penPoints=null,posterBrushSize=8;
 let editing=null,touchSession=null;const touches=new Map(),scene=$('posterScene');
 function selectedItem(){return poster.items.find(i=>i.id===selected);}
 function savePoster(){const ok=put(KEYS.poster,JSON.stringify(poster));$('posterSaveStatus').textContent=ok?'✓ 자동 저장됨':'저장 실패';}
@@ -183,8 +183,11 @@ function undoPoster(forward=false){
 function updateHistory(){$('posterUndo').disabled=!undo.length;$('posterRedo').disabled=!redo.length;}
 $('posterUndo').onclick=()=>undoPoster();$('posterRedo').onclick=()=>undoPoster(true);
 $('selectTool').onclick=()=>setTool('select');$('posterPen').onclick=()=>setTool('pen');
-function setTool(t){finishText();commit();ptool=t;$('selectTool').classList.toggle('active',t==='select');$('posterPen').classList.toggle('active',t==='pen');scene.style.cursor=t==='pen'?'crosshair':'default';if(t==='pen')toast('종이 위를 끌어 자유롭게 그려 보세요.');}
-function setSelected(id){if(editing&&editing!==id)finishText();selected=id;ptool='select';$('selectTool').classList.add('active');$('posterPen').classList.remove('active');scene.style.cursor='default';syncPoster();}
+$('posterQuickUndo')&&($('posterQuickUndo').onclick=()=>undoPoster());$('posterQuickRedo')&&($('posterQuickRedo').onclick=()=>undoPoster(true));
+$('posterBrushSize')&&($('posterBrushSize').oninput=e=>{posterBrushSize=+e.target.value;$('posterBrushSizeValue').textContent=posterBrushSize;});
+$('inspectorToggle')&&($('inspectorToggle').onclick=()=>{$('posterWorkspace').classList.toggle('inspector-open');});
+function setTool(t){finishText();commit();ptool=t;const posterEl=$('posterWorkspace');posterEl.classList.toggle('posterWorkspaceDraw',t==='pen');if(t==='pen'){selected=null;editing=null;$('textEditor').hidden=true;$('posterModeBadge')&&($('posterModeBadge').textContent='그리기 모드');toast('그리기 모드입니다. 계속 이어서 그릴 수 있어요. 선택은 ↖ 선택 도구를 눌렀을 때만 됩니다.');}else{$('posterModeBadge')&&($('posterModeBadge').textContent='선택 모드');} $('selectTool').classList.toggle('active',t==='select');$('posterPen').classList.toggle('active',t==='pen');scene.style.cursor=t==='pen'?'crosshair':'default';syncPoster();}
+function setSelected(id){if(ptool==='pen')return;if(editing&&editing!==id)finishText();selected=id;ptool='select';$('posterWorkspace').classList.remove('posterWorkspaceDraw');$('selectTool').classList.add('active');$('posterPen').classList.remove('active');scene.style.cursor='default';syncPoster();}
 function add(item,edit=false){
  finishText();commit();begin();poster.items.push(item);selected=item.id;ptool='select';commit();syncPoster();if(edit)openText(item.id);
 }
@@ -203,7 +206,7 @@ function geometry(it,ghost=false){
   const g=engine.glyph(it.name),contours=g?.contours||it.snapshot||[],d=C.pathD(contours);
   svg=`<path d="${d}" fill="${color}" transform="translate(0 ${h*.94}) scale(${w/700} ${-h/850})"/>`;
  }else if(it.kind==='stroke'){
-  svg=`<path d="${(it.points||[]).map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' ')}" fill="none" stroke="${color}" stroke-width="${it.lineWidth||8}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  svg=`<path d="${(it.points||[]).map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' ')}" fill="none" stroke="${color}" stroke-width="${it.lineWidth||8}" stroke-linecap="round" stroke-linejoin="round" pointer-events="${ptool==='pen'?'none':'visibleStroke'}"/>`;
  }else{
   if(it.shape==='circle')svg=`<ellipse cx="${w/2}" cy="${h/2}" rx="${w/2}" ry="${h/2}" fill="${color}"/>`;
   else if(it.shape==='square')svg=`<rect width="${w}" height="${h}" rx="${Math.min(w,h)*.025}" fill="${color}"/>`;
@@ -235,7 +238,7 @@ function selectionSVG(){
 function renderPoster(){
  let overlays=snapLines.map(axis=>axis==='x'?'<path d="M450 0V1200"/>':'<path d="M0 600H900"/>').join('');
  overlays=overlays?`<g stroke="#df68d9" stroke-width="2" stroke-dasharray="8 8" pointer-events="none">${overlays}</g>`:'';
- const pen=penPoints?`<path d="${penPoints.map((p,i)=>(i?'L':'M')+p.x+' '+p.y).join(' ')}" fill="none" stroke="${esc(currentColor)}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`:'';
+ const pen=penPoints?`<path d="${penPoints.map((p,i)=>(i?'L':'M')+p.x+' '+p.y).join(' ')}" fill="none" stroke="${esc(currentColor)}" stroke-width="${posterBrushSize}" stroke-linecap="round" stroke-linejoin="round"/>`:'';
  scene.innerHTML=`<defs><clipPath id="paperClip"><rect width="900" height="1200"/></clipPath></defs><rect class="paper" width="900" height="1200" fill="white"/><g clip-path="url(#paperClip)"><rect width="900" height="1200" fill="${esc(safeColor(poster.bg,'#ffffff'))}"/>${patternSVG()}${poster.items.map(it=>itemSVG(it,true)).join('')}${pen}${overlays}</g>${selectionSVG()}`;
 }
 const shapeLabels={circle:'원',square:'네모',triangle:'세모',star:'별',heart:'하트'};
@@ -259,7 +262,7 @@ function syncInspector(full=true){
  document.querySelectorAll('#backgroundPalette button').forEach(b=>b.classList.toggle('selected',b.dataset.color===poster.bg));
  $('bringForward').disabled=!it||poster.items.indexOf(it)===poster.items.length-1;$('sendBackward').disabled=!it||poster.items.indexOf(it)===0;
 }
-function syncPoster(){renderPoster();syncInspector();renderLayers();updateHistory();$('selectTool').classList.toggle('active',ptool==='select');$('posterPen').classList.toggle('active',ptool==='pen');}
+function syncPoster(){renderPoster();syncInspector();renderLayers();updateHistory();$('posterWorkspace').classList.toggle('posterWorkspaceDraw',ptool==='pen');$('selectTool').classList.toggle('active',ptool==='select');$('posterPen').classList.toggle('active',ptool==='pen');}
 function openText(id){
  const it=poster.items.find(i=>i.id===id);if(!it||it.kind!=='text')return;finishText();selected=id;editing=id;$('inlineText').value=it.text;$('textEditor').hidden=false;renderPoster();
  $('inlineText').focus({preventScroll:true});$('inlineText').select();
@@ -298,20 +301,22 @@ function rotate(x,y,angle){const a=angle*Math.PI/180;return{x:x*Math.cos(a)-y*Ma
 function abortDrag(){if(drag||penPoints){cancelTransaction();drag=null;penPoints=null;snapLines=[];renderPoster();}}
 scene.onpointerdown=e=>{
  if(e.button>0)return;e.preventDefault();scene.setPointerCapture(e.pointerId);
+ // Drawing mode is isolated from object selection. Existing strokes/shapes cannot steal the Pencil gesture.
  if(e.pointerType==='touch'){
   if(!touches.size)touchSession={start:performance.now(),max:0,moved:false,cancelled:false};
   touches.set(e.pointerId,{x:e.clientX,y:e.clientY});touchSession.max=Math.max(touchSession.max,touches.size);
   if(touches.size>1){abortDrag();return;}
  }
  finishText();commit();scene.focus();
- const p=point(e),h=e.target.closest('[data-handle]')?.dataset.handle,it=selectedItem();
- if(h&&it){
-  begin();const g=geometry(it);
-  drag={type:h==='rotate'?'rotate':'resize',id:it.id,pointer:e.pointerId,start:p,origin:clone(it),g,handle:h,startAngle:Math.atan2(p.y-it.y,p.x-it.x)*180/Math.PI};return;
- }
+ const p=point(e);
  if(ptool==='pen'){
   if(p.x<0||p.y<0||p.x>900||p.y>1200)return;
   begin();selected=null;penPoints=[p];drag={type:'pen',pointer:e.pointerId};renderPoster();return;
+ }
+ const h=e.target.closest('[data-handle]')?.dataset.handle,it=selectedItem();
+ if(h&&it){
+  begin();const g=geometry(it);
+  drag={type:h==='rotate'?'rotate':'resize',id:it.id,pointer:e.pointerId,start:p,origin:clone(it),g,handle:h,startAngle:Math.atan2(p.y-it.y,p.x-it.x)*180/Math.PI};return;
  }
  const id=e.target.closest('[data-id]')?.dataset.id;
  if(id){setSelected(id);begin();drag={type:'move',id,pointer:e.pointerId,start:p,origin:clone(selectedItem())};}
@@ -354,10 +359,10 @@ function pointerEnd(e,cancelled=false){
   else if(drag.type==='pen'&&penPoints){
    if(penPoints.length===1)penPoints.push({x:penPoints[0].x+.1,y:penPoints[0].y+.1});
    const b=C.bounds([penPoints.map(p=>[p.x,p.y])]),pad=5;
-   const it=baseItem('stroke',{x:(b.x0+b.x1)/2,y:(b.y0+b.y1)/2,w:b.w+pad*2,h:b.h+pad*2,lineWidth:8,points:penPoints.map(p=>[p.x-b.x0+pad,p.y-b.y0+pad])});
+   const it=baseItem('stroke',{x:(b.x0+b.x1)/2,y:(b.y0+b.y1)/2,w:b.w+pad*2,h:b.h+pad*2,lineWidth:posterBrushSize,points:penPoints.map(p=>[p.x-b.x0+pad,p.y-b.y0+pad])});
    // Keep pen mode continuous: a finished stroke is saved without being auto-selected.
    // This prevents transform handles from covering the canvas between Apple Pencil strokes.
-   poster.items.push(it);selected=null;
+   poster.items.push(it);selected=null;ptool='pen';
   }
   drag=null;penPoints=null;snapLines=[];if(!cancelled)commit();syncPoster();
  }
