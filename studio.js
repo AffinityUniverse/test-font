@@ -267,6 +267,7 @@ function syncInspector(full=true){
  document.querySelectorAll('#elementPalette button').forEach(b=>b.classList.toggle('selected',b.dataset.color===it?.color));
  document.querySelectorAll('#backgroundPalette button').forEach(b=>b.classList.toggle('selected',b.dataset.color===poster.bg));
  $('bringForward').disabled=!it||poster.items.indexOf(it)===poster.items.length-1;$('sendBackward').disabled=!it||poster.items.indexOf(it)===0;
+ if($('deleteSelectedTop'))$('deleteSelectedTop').disabled=!it;
 }
 function syncPoster(){renderPoster();syncInspector();renderLayers();updateHistory();$('posterWorkspace').classList.toggle('posterWorkspaceDraw',ptool==='pen');$('selectTool').classList.toggle('active',ptool==='select');$('posterPen').classList.toggle('active',ptool==='pen');}
 function openText(id){
@@ -282,7 +283,12 @@ function bindProperty(id,field,convert=v=>v){
  $(id).addEventListener('input',e=>{const it=selectedItem();if(!it)return;change(()=>{it[field]=convert(e.target.value);},true);});
  $(id).addEventListener('change',()=>commit());$(id).addEventListener('blur',()=>commit());
 }
-bindProperty('posterText','text');bindProperty('elementColor','color',v=>(currentColor=safeColor(v)));
+bindProperty('posterText','text');
+$('elementColor').addEventListener('input',e=>{
+ const c=safeColor(e.target.value);currentColor=c;if($('quickColor'))$('quickColor').value=c;
+ const it=selectedItem();if(it)change(()=>it.color=c,true);else renderPoster();
+});
+$('elementColor').addEventListener('change',()=>commit());
 $('quickColor')&&($('quickColor').oninput=e=>{
  currentColor=safeColor(e.target.value);
  const it=selectedItem();
@@ -311,13 +317,21 @@ document.querySelectorAll('[data-kidcolor]').forEach(b=>b.onclick=()=>{
  const c=b.dataset.kidcolor;currentColor=c;
  if($('quickColor'))$('quickColor').value=c;
  if($('elementColor'))$('elementColor').value=c;
- const it=selectedItem();if(it)change(()=>it.color=c);else renderPoster();
+ const it=selectedItem();if(it)change(()=>it.color=c);else{renderPoster();if(ptool==='pen')toast('펜 색을 바꿨어요.');}
 });
 document.querySelectorAll('[data-bgcolor]').forEach(b=>b.onclick=()=>{
  const c=b.dataset.bgcolor;if($('posterBg'))$('posterBg').value=c;change(()=>poster.bg=c);
 });
 $('duplicateElement').onclick=()=>{const it=selectedItem();if(it)add({...clone(it),id:uid(),x:it.x+28,y:it.y+28});};
 $('deleteElement').onclick=()=>{finishText();const it=selectedItem();if(it)change(()=>{poster.items=poster.items.filter(x=>x.id!==selected);selected=null;});};
+$('deleteSelectedTop')&&($('deleteSelectedTop').onclick=()=>$('deleteElement').click());
+$('clearDrawing')&&($('clearDrawing').onclick=()=>{
+ finishText();commit();
+ const count=poster.items.filter(x=>x.kind==='stroke').length;
+ if(!count){toast('지울 그림이 없어요.');return;}
+ if(!confirm('펜으로 그린 그림을 모두 지울까요? 글자와 도형, 템플릿은 그대로 남아요.'))return;
+ begin();poster.items=poster.items.filter(x=>x.kind!=='stroke');selected=null;commit();syncPoster();toast('펜으로 그린 그림을 모두 지웠어요.');
+});
 $('centerElement').onclick=()=>{const it=selectedItem();if(it)change(()=>{it.x=450;it.y=450;});};
 function order(delta){const it=selectedItem();if(!it)return;const i=poster.items.indexOf(it),j=i+delta;if(j<0||j>=poster.items.length)return;change(()=>{poster.items.splice(i,1);poster.items.splice(j,0,it);});}
 $('bringForward').onclick=()=>order(1);$('sendBackward').onclick=()=>order(-1);
@@ -443,6 +457,6 @@ document.addEventListener('keydown',e=>{
  }
 });
 window.addEventListener('pagehide',()=>{finishDrawing();commit();});
-window.FontStudio={engine,getDrawings:()=>clone(drawings),getCustomNames:()=>customNames.slice(),getPoster:()=>clone(poster),getSelection:()=>selected,artSVG,geometry,textLayout,version:'3.0'};
+window.FontStudio={engine,getDrawings:()=>clone(drawings),getCustomNames:()=>customNames.slice(),getPoster:()=>clone(poster),getSelection:()=>selected,artSVG,geometry,textLayout,version:'3.4'};
 renderCustom();refreshFont();refreshEggTray();syncPoster();
 })();
